@@ -190,7 +190,7 @@
             // 
             this.pAddWord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.pAddWord.Controls.Add(this.tbAddWord);
-            this.pAddWord.Location = new System.Drawing.Point(173, 54);
+            this.pAddWord.Location = new System.Drawing.Point(175, 54);
             this.pAddWord.Name = "pAddWord";
             this.pAddWord.Padding = new System.Windows.Forms.Padding(2);
             this.pAddWord.Size = new System.Drawing.Size(413, 36);
@@ -206,7 +206,6 @@
             this.tbAddWord.Location = new System.Drawing.Point(2, 2);
             this.tbAddWord.Margin = new System.Windows.Forms.Padding(4);
             this.tbAddWord.Name = "tbAddWord";
-            this.tbAddWord.ReadOnly = true;
             this.tbAddWord.Size = new System.Drawing.Size(409, 31);
             this.tbAddWord.TabIndex = 2;
             this.tbAddWord.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -231,7 +230,7 @@
             // 
             this.pGetWord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.pGetWord.Controls.Add(this.tbRandomString);
-            this.pGetWord.Location = new System.Drawing.Point(173, 12);
+            this.pGetWord.Location = new System.Drawing.Point(175, 12);
             this.pGetWord.Name = "pGetWord";
             this.pGetWord.Padding = new System.Windows.Forms.Padding(2);
             this.pGetWord.Size = new System.Drawing.Size(413, 36);
