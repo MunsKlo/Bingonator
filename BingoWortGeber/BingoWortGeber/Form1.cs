@@ -11,10 +11,10 @@ using System.Windows.Forms;
 namespace BingoWortGeber
 {
 
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         Random random = new Random();
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
             ntbTextSize.Value = 20;
@@ -91,11 +91,6 @@ namespace BingoWortGeber
             tbRandomString.Text = "Spiel wurde zurückgesetzt";
         }
 
-        private void tbClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void ntbTextSize_ValueChanged(object sender, EventArgs e)
         {
             var numb = (int)ntbTextSize.Value;
@@ -103,6 +98,11 @@ namespace BingoWortGeber
             {
                 rtbFullWordList.Font = new Font(rtbFullWordList.Font.FontFamily.Name, numb, FontStyle.Bold);
             }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
