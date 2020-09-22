@@ -422,9 +422,6 @@
             this.MinimumSize = new System.Drawing.Size(981, 636);
             this.Name = "frmMain";
             this.Text = "Bingonator";
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMain_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMain_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmMain_MouseUp);
             this.Resize += new System.EventHandler(this.frmMain_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).EndInit();
             this.pAddWord.ResumeLayout(false);

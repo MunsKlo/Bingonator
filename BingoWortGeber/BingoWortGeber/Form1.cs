@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BingoWortGeber
@@ -24,8 +20,21 @@ namespace BingoWortGeber
             ntbTextSize.Value = (int)rtbFullWordList.Font.Size;
             UpdateLabels();
             UpdateButtons();
-            
-            //CheckDuplicates();
+
+            MouseUp += (o, e) => { MouseDragDown(); };
+            MouseDown += (o, e) => { MouseDragUp(); };
+            MouseMove += (o, e) => { MouseMoving(); };
+
+            pbLogo.MouseUp += (o, e) => { MouseDragDown(); };
+            pbLogo.MouseDown += (o, e) => { MouseDragUp(); };
+            pbLogo.MouseMove += (o, e) => { MouseMoving(); };
+
+            foreach (var label in Controls.OfType<Label>())
+            {
+                label.MouseUp += (o, e) => { MouseDragDown(); };
+                label.MouseDown += (o, e) => { MouseDragUp(); };
+                label.MouseMove += (o, e) => { MouseMoving(); };
+            }
         }
 
         private void btnRandom_Click(object sender, EventArgs e)
@@ -66,22 +75,6 @@ namespace BingoWortGeber
                     rtbFullWordList.Text = text;
                 }
             }
-        }
-
-        private void OutputDuplicates()
-        {
-            var list = new List<string>();
-            foreach (var item in Variables.words)
-            {
-                if (!list.Contains(item))
-                    list.Add(item);
-                else
-                {
-                    tbAddWord.Text += item + " ";
-                }
-
-            }
-            tbAddWord.Text += list.Count.ToString() + " " + Variables.words.Count.ToString();
         }
 
         private bool CheckDuplicate(string newWord)
@@ -195,27 +188,6 @@ namespace BingoWortGeber
             WindowState = FormWindowState.Minimized;
         }
 
-        private void frmMain_MouseDown(object sender, MouseEventArgs e)
-        {
-            dragging = true;
-            dragCursorPoint = Cursor.Position;
-            dragFrmPoint = Location;
-        }
-
-        private void frmMain_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (dragging)
-            {
-                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
-                Location = Point.Add(dragFrmPoint, new Size(dif));
-            }
-        }
-
-        private void frmMain_MouseUp(object sender, MouseEventArgs e)
-        {
-            dragging = false;
-        }
-
         private void lbMaxNormal_Click(object sender, EventArgs e)
         {
             if(WindowState == FormWindowState.Normal)
@@ -237,6 +209,27 @@ namespace BingoWortGeber
             else
             {
                 lbMaxNormal.Text = "🗗";
+            }
+        }
+
+        void MouseDragUp()
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFrmPoint = Location;
+        }
+
+        void MouseDragDown()
+        {
+            dragging = false;
+        }
+
+        void MouseMoving()
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                Location = Point.Add(dragFrmPoint, new Size(dif));
             }
         }
     }
