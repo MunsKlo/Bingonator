@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnRandom = new System.Windows.Forms.Button();
             this.rtbFullWordList = new System.Windows.Forms.RichTextBox();
             this.btnGetStringPool = new System.Windows.Forms.Button();
@@ -46,11 +47,19 @@
             this.lbCounter = new System.Windows.Forms.Label();
             this.pTextSize = new System.Windows.Forms.Panel();
             this.btnResetWords = new System.Windows.Forms.Button();
+            this.lbMaxMin = new System.Windows.Forms.Label();
+            this.lbMaxNormal = new System.Windows.Forms.Label();
+            this.pTopBorder = new System.Windows.Forms.Panel();
+            this.pBottomBorder = new System.Windows.Forms.Panel();
+            this.pRightBorder = new System.Windows.Forms.Panel();
+            this.pLeftBorder = new System.Windows.Forms.Panel();
+            this.pbLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).BeginInit();
             this.pAddWord.SuspendLayout();
             this.pGetWord.SuspendLayout();
             this.pWordList.SuspendLayout();
             this.pTextSize.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // btnRandom
@@ -306,12 +315,95 @@
             this.btnResetWords.UseVisualStyleBackColor = false;
             this.btnResetWords.Click += new System.EventHandler(this.btnResetWords_Click);
             // 
+            // lbMaxMin
+            // 
+            this.lbMaxMin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbMaxMin.AutoSize = true;
+            this.lbMaxMin.BackColor = System.Drawing.Color.Transparent;
+            this.lbMaxMin.Font = new System.Drawing.Font("Arial", 15F);
+            this.lbMaxMin.ForeColor = System.Drawing.Color.White;
+            this.lbMaxMin.Location = new System.Drawing.Point(921, -2);
+            this.lbMaxMin.Margin = new System.Windows.Forms.Padding(0);
+            this.lbMaxMin.Name = "lbMaxMin";
+            this.lbMaxMin.Size = new System.Drawing.Size(25, 23);
+            this.lbMaxMin.TabIndex = 5;
+            this.lbMaxMin.Text = "🗕︎";
+            this.lbMaxMin.Click += new System.EventHandler(this.lbMaxMin_Click);
+            // 
+            // lbMaxNormal
+            // 
+            this.lbMaxNormal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbMaxNormal.AutoSize = true;
+            this.lbMaxNormal.BackColor = System.Drawing.Color.Transparent;
+            this.lbMaxNormal.Font = new System.Drawing.Font("Arial", 15F);
+            this.lbMaxNormal.ForeColor = System.Drawing.Color.White;
+            this.lbMaxNormal.Location = new System.Drawing.Point(949, -2);
+            this.lbMaxNormal.Name = "lbMaxNormal";
+            this.lbMaxNormal.Size = new System.Drawing.Size(25, 23);
+            this.lbMaxNormal.TabIndex = 17;
+            this.lbMaxNormal.Text = "🗖︎";
+            this.lbMaxNormal.Click += new System.EventHandler(this.lbMaxNormal_Click);
+            // 
+            // pTopBorder
+            // 
+            this.pTopBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pTopBorder.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pTopBorder.Location = new System.Drawing.Point(0, 0);
+            this.pTopBorder.Name = "pTopBorder";
+            this.pTopBorder.Size = new System.Drawing.Size(981, 2);
+            this.pTopBorder.TabIndex = 5;
+            // 
+            // pBottomBorder
+            // 
+            this.pBottomBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pBottomBorder.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pBottomBorder.Location = new System.Drawing.Point(0, 634);
+            this.pBottomBorder.Name = "pBottomBorder";
+            this.pBottomBorder.Size = new System.Drawing.Size(981, 2);
+            this.pBottomBorder.TabIndex = 18;
+            // 
+            // pRightBorder
+            // 
+            this.pRightBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pRightBorder.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pRightBorder.Location = new System.Drawing.Point(979, 2);
+            this.pRightBorder.Name = "pRightBorder";
+            this.pRightBorder.Size = new System.Drawing.Size(2, 632);
+            this.pRightBorder.TabIndex = 22;
+            // 
+            // pLeftBorder
+            // 
+            this.pLeftBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pLeftBorder.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pLeftBorder.Location = new System.Drawing.Point(0, 2);
+            this.pLeftBorder.Name = "pLeftBorder";
+            this.pLeftBorder.Size = new System.Drawing.Size(2, 632);
+            this.pLeftBorder.TabIndex = 23;
+            // 
+            // pbLogo
+            // 
+            this.pbLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pbLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbLogo.Image")));
+            this.pbLogo.Location = new System.Drawing.Point(27, 461);
+            this.pbLogo.Name = "pbLogo";
+            this.pbLogo.Size = new System.Drawing.Size(124, 122);
+            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbLogo.TabIndex = 5;
+            this.pbLogo.TabStop = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(131)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(981, 636);
+            this.Controls.Add(this.pLeftBorder);
+            this.Controls.Add(this.pRightBorder);
+            this.Controls.Add(this.pBottomBorder);
+            this.Controls.Add(this.pTopBorder);
+            this.Controls.Add(this.lbMaxNormal);
+            this.Controls.Add(this.lbMaxMin);
+            this.Controls.Add(this.pbLogo);
             this.Controls.Add(this.btnResetWords);
             this.Controls.Add(this.pTextSize);
             this.Controls.Add(this.pWordList);
@@ -326,11 +418,14 @@
             this.Controls.Add(this.btnRandom);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(981, 636);
             this.Name = "frmMain";
-            this.ShowIcon = false;
             this.Text = "Bingonator";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMain_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMain_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmMain_MouseUp);
+            this.Resize += new System.EventHandler(this.frmMain_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).EndInit();
             this.pAddWord.ResumeLayout(false);
             this.pAddWord.PerformLayout();
@@ -339,6 +434,7 @@
             this.pWordList.ResumeLayout(false);
             this.pWordList.PerformLayout();
             this.pTextSize.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -364,6 +460,13 @@
         private System.Windows.Forms.Label lbCounter;
         private System.Windows.Forms.Label lbRemainingWords;
         private System.Windows.Forms.Button btnResetWords;
+        private System.Windows.Forms.Label lbMaxMin;
+        private System.Windows.Forms.Label lbMaxNormal;
+        private System.Windows.Forms.Panel pTopBorder;
+        private System.Windows.Forms.Panel pBottomBorder;
+        private System.Windows.Forms.Panel pRightBorder;
+        private System.Windows.Forms.Panel pLeftBorder;
+        private System.Windows.Forms.PictureBox pbLogo;
     }
 }
 

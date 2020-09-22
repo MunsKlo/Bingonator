@@ -15,12 +15,16 @@ namespace BingoWortGeber
     {
         Random random = new Random();
         bool playing = false;
+        bool dragging = false;
+        Point dragCursorPoint;
+        Point dragFrmPoint;
         public frmMain()
         {
             InitializeComponent();
             ntbTextSize.Value = (int)rtbFullWordList.Font.Size;
             UpdateLabels();
             UpdateButtons();
+            
             //CheckDuplicates();
         }
 
@@ -183,6 +187,56 @@ namespace BingoWortGeber
                 btnAddWord.BackColor = Color.White;
                 btnResetWords.BackColor = Color.White;
                 btnRandom.BackColor = Color.FromArgb(187, 194, 194);
+            }
+        }
+
+        private void lbMaxMin_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void frmMain_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFrmPoint = Location;
+        }
+
+        private void frmMain_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                Location = Point.Add(dragFrmPoint, new Size(dif));
+            }
+        }
+
+        private void frmMain_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
+
+        private void lbMaxNormal_Click(object sender, EventArgs e)
+        {
+            if(WindowState == FormWindowState.Normal)
+            {
+                WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                WindowState = FormWindowState.Normal;
+            }
+        }
+
+        private void frmMain_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Normal)
+            {
+                lbMaxNormal.Text = "🗖";
+            }
+            else
+            {
+                lbMaxNormal.Text = "🗗";
             }
         }
     }
