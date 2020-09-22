@@ -33,7 +33,7 @@
             this.btnGetStringPool = new System.Windows.Forms.Button();
             this.btnAddWord = new System.Windows.Forms.Button();
             this.lbTitle = new System.Windows.Forms.Label();
-            this.btnRestart = new System.Windows.Forms.Button();
+            this.btnStartOrQuit = new System.Windows.Forms.Button();
             this.lbTextSize = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.ntbTextSize = new System.Windows.Forms.NumericUpDown();
@@ -42,7 +42,10 @@
             this.tbRandomString = new System.Windows.Forms.TextBox();
             this.pGetWord = new System.Windows.Forms.Panel();
             this.pWordList = new System.Windows.Forms.Panel();
+            this.lbRemainingWords = new System.Windows.Forms.Label();
+            this.lbCounter = new System.Windows.Forms.Label();
             this.pTextSize = new System.Windows.Forms.Panel();
+            this.btnResetWords = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).BeginInit();
             this.pAddWord.SuspendLayout();
             this.pGetWord.SuspendLayout();
@@ -60,7 +63,7 @@
             this.btnRandom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.btnRandom.Location = new System.Drawing.Point(12, 12);
             this.btnRandom.Name = "btnRandom";
-            this.btnRandom.Size = new System.Drawing.Size(153, 36);
+            this.btnRandom.Size = new System.Drawing.Size(153, 35);
             this.btnRandom.TabIndex = 0;
             this.btnRandom.Text = "Bekomme Wort";
             this.btnRandom.UseVisualStyleBackColor = false;
@@ -76,7 +79,7 @@
             this.rtbFullWordList.Location = new System.Drawing.Point(2, 2);
             this.rtbFullWordList.Name = "rtbFullWordList";
             this.rtbFullWordList.ReadOnly = true;
-            this.rtbFullWordList.Size = new System.Drawing.Size(790, 524);
+            this.rtbFullWordList.Size = new System.Drawing.Size(790, 492);
             this.rtbFullWordList.TabIndex = 2;
             this.rtbFullWordList.TabStop = false;
             this.rtbFullWordList.Text = "";
@@ -89,9 +92,9 @@
             this.btnGetStringPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGetStringPool.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGetStringPool.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.btnGetStringPool.Location = new System.Drawing.Point(12, 96);
+            this.btnGetStringPool.Location = new System.Drawing.Point(12, 95);
             this.btnGetStringPool.Name = "btnGetStringPool";
-            this.btnGetStringPool.Size = new System.Drawing.Size(153, 36);
+            this.btnGetStringPool.Size = new System.Drawing.Size(153, 35);
             this.btnGetStringPool.TabIndex = 3;
             this.btnGetStringPool.Text = "Wörter ausgeben";
             this.btnGetStringPool.UseVisualStyleBackColor = false;
@@ -107,7 +110,7 @@
             this.btnAddWord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.btnAddWord.Location = new System.Drawing.Point(12, 54);
             this.btnAddWord.Name = "btnAddWord";
-            this.btnAddWord.Size = new System.Drawing.Size(153, 36);
+            this.btnAddWord.Size = new System.Drawing.Size(153, 35);
             this.btnAddWord.TabIndex = 1;
             this.btnAddWord.Text = "Wort hinzufügen";
             this.btnAddWord.UseVisualStyleBackColor = false;
@@ -119,35 +122,35 @@
             this.lbTitle.AutoSize = true;
             this.lbTitle.Font = new System.Drawing.Font("Poor Richard", 35F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbTitle.ForeColor = System.Drawing.Color.White;
-            this.lbTitle.Location = new System.Drawing.Point(667, 28);
+            this.lbTitle.Location = new System.Drawing.Point(675, 23);
             this.lbTitle.Name = "lbTitle";
             this.lbTitle.Size = new System.Drawing.Size(234, 53);
             this.lbTitle.TabIndex = 6;
             this.lbTitle.Text = "Bingonator";
             this.lbTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // btnRestart
+            // btnStartOrQuit
             // 
-            this.btnRestart.BackColor = System.Drawing.Color.White;
-            this.btnRestart.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.btnRestart.FlatAppearance.BorderSize = 2;
-            this.btnRestart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRestart.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.btnRestart.Location = new System.Drawing.Point(12, 138);
-            this.btnRestart.Name = "btnRestart";
-            this.btnRestart.Size = new System.Drawing.Size(153, 36);
-            this.btnRestart.TabIndex = 4;
-            this.btnRestart.Text = "Spiel neustarten";
-            this.btnRestart.UseVisualStyleBackColor = false;
-            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
+            this.btnStartOrQuit.BackColor = System.Drawing.Color.White;
+            this.btnStartOrQuit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnStartOrQuit.FlatAppearance.BorderSize = 2;
+            this.btnStartOrQuit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStartOrQuit.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStartOrQuit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnStartOrQuit.Location = new System.Drawing.Point(12, 136);
+            this.btnStartOrQuit.Name = "btnStartOrQuit";
+            this.btnStartOrQuit.Size = new System.Drawing.Size(153, 35);
+            this.btnStartOrQuit.TabIndex = 4;
+            this.btnStartOrQuit.Text = "Spiel starten";
+            this.btnStartOrQuit.UseVisualStyleBackColor = false;
+            this.btnStartOrQuit.Click += new System.EventHandler(this.btnStartOrQuit_Click);
             // 
             // lbTextSize
             // 
             this.lbTextSize.AutoSize = true;
             this.lbTextSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbTextSize.ForeColor = System.Drawing.Color.White;
-            this.lbTextSize.Location = new System.Drawing.Point(11, 221);
+            this.lbTextSize.Location = new System.Drawing.Point(11, 294);
             this.lbTextSize.Name = "lbTextSize";
             this.lbTextSize.Size = new System.Drawing.Size(157, 29);
             this.lbTextSize.TabIndex = 9;
@@ -163,9 +166,9 @@
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.btnClose.Location = new System.Drawing.Point(12, 586);
+            this.btnClose.Location = new System.Drawing.Point(14, 589);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(153, 38);
+            this.btnClose.Size = new System.Drawing.Size(153, 35);
             this.btnClose.TabIndex = 5;
             this.btnClose.Text = "Schließen";
             this.btnClose.UseVisualStyleBackColor = false;
@@ -193,7 +196,7 @@
             this.pAddWord.Location = new System.Drawing.Point(175, 54);
             this.pAddWord.Name = "pAddWord";
             this.pAddWord.Padding = new System.Windows.Forms.Padding(2);
-            this.pAddWord.Size = new System.Drawing.Size(413, 36);
+            this.pAddWord.Size = new System.Drawing.Size(413, 35);
             this.pAddWord.TabIndex = 2;
             // 
             // tbAddWord
@@ -233,7 +236,7 @@
             this.pGetWord.Location = new System.Drawing.Point(175, 12);
             this.pGetWord.Name = "pGetWord";
             this.pGetWord.Padding = new System.Windows.Forms.Padding(2);
-            this.pGetWord.Size = new System.Drawing.Size(413, 36);
+            this.pGetWord.Size = new System.Drawing.Size(413, 35);
             this.pGetWord.TabIndex = 13;
             // 
             // pWordList
@@ -242,22 +245,66 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pWordList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pWordList.Controls.Add(this.lbRemainingWords);
+            this.pWordList.Controls.Add(this.lbCounter);
             this.pWordList.Controls.Add(this.rtbFullWordList);
-            this.pWordList.Location = new System.Drawing.Point(175, 96);
+            this.pWordList.Location = new System.Drawing.Point(175, 95);
             this.pWordList.Name = "pWordList";
-            this.pWordList.Padding = new System.Windows.Forms.Padding(2);
-            this.pWordList.Size = new System.Drawing.Size(794, 528);
+            this.pWordList.Padding = new System.Windows.Forms.Padding(2, 2, 2, 35);
+            this.pWordList.Size = new System.Drawing.Size(794, 529);
             this.pWordList.TabIndex = 15;
+            // 
+            // lbRemainingWords
+            // 
+            this.lbRemainingWords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbRemainingWords.AutoSize = true;
+            this.lbRemainingWords.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.lbRemainingWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRemainingWords.ForeColor = System.Drawing.Color.White;
+            this.lbRemainingWords.Location = new System.Drawing.Point(5, 503);
+            this.lbRemainingWords.Name = "lbRemainingWords";
+            this.lbRemainingWords.Size = new System.Drawing.Size(35, 17);
+            this.lbRemainingWords.TabIndex = 4;
+            this.lbRemainingWords.Text = "test";
+            // 
+            // lbCounter
+            // 
+            this.lbCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbCounter.AutoSize = true;
+            this.lbCounter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.lbCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCounter.ForeColor = System.Drawing.Color.White;
+            this.lbCounter.Location = new System.Drawing.Point(684, 503);
+            this.lbCounter.Name = "lbCounter";
+            this.lbCounter.Size = new System.Drawing.Size(35, 17);
+            this.lbCounter.TabIndex = 3;
+            this.lbCounter.Text = "test";
             // 
             // pTextSize
             // 
             this.pTextSize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.pTextSize.Controls.Add(this.ntbTextSize);
-            this.pTextSize.Location = new System.Drawing.Point(12, 265);
+            this.pTextSize.Location = new System.Drawing.Point(12, 338);
             this.pTextSize.Name = "pTextSize";
             this.pTextSize.Padding = new System.Windows.Forms.Padding(2);
             this.pTextSize.Size = new System.Drawing.Size(153, 38);
             this.pTextSize.TabIndex = 3;
+            // 
+            // btnResetWords
+            // 
+            this.btnResetWords.BackColor = System.Drawing.Color.White;
+            this.btnResetWords.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnResetWords.FlatAppearance.BorderSize = 2;
+            this.btnResetWords.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetWords.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnResetWords.Location = new System.Drawing.Point(12, 177);
+            this.btnResetWords.Name = "btnResetWords";
+            this.btnResetWords.Size = new System.Drawing.Size(153, 35);
+            this.btnResetWords.TabIndex = 16;
+            this.btnResetWords.Text = "Zurücksetzen";
+            this.btnResetWords.UseVisualStyleBackColor = false;
+            this.btnResetWords.Click += new System.EventHandler(this.btnResetWords_Click);
             // 
             // frmMain
             // 
@@ -265,13 +312,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(131)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(981, 636);
+            this.Controls.Add(this.btnResetWords);
             this.Controls.Add(this.pTextSize);
             this.Controls.Add(this.pWordList);
             this.Controls.Add(this.pAddWord);
             this.Controls.Add(this.pGetWord);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lbTextSize);
-            this.Controls.Add(this.btnRestart);
+            this.Controls.Add(this.btnStartOrQuit);
             this.Controls.Add(this.lbTitle);
             this.Controls.Add(this.btnAddWord);
             this.Controls.Add(this.btnGetStringPool);
@@ -289,6 +337,7 @@
             this.pGetWord.ResumeLayout(false);
             this.pGetWord.PerformLayout();
             this.pWordList.ResumeLayout(false);
+            this.pWordList.PerformLayout();
             this.pTextSize.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -302,7 +351,7 @@
         private System.Windows.Forms.Button btnGetStringPool;
         private System.Windows.Forms.Button btnAddWord;
         private System.Windows.Forms.Label lbTitle;
-        private System.Windows.Forms.Button btnRestart;
+        private System.Windows.Forms.Button btnStartOrQuit;
         private System.Windows.Forms.Label lbTextSize;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.NumericUpDown ntbTextSize;
@@ -312,6 +361,9 @@
         private System.Windows.Forms.Panel pGetWord;
         private System.Windows.Forms.Panel pWordList;
         private System.Windows.Forms.Panel pTextSize;
+        private System.Windows.Forms.Label lbCounter;
+        private System.Windows.Forms.Label lbRemainingWords;
+        private System.Windows.Forms.Button btnResetWords;
     }
 }
 

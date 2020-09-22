@@ -14,31 +14,54 @@ namespace BingoWortGeber
     public partial class frmMain : Form
     {
         Random random = new Random();
+        bool playing = false;
         public frmMain()
         {
             InitializeComponent();
-            ntbTextSize.Value = 20;
+            ntbTextSize.Value = (int)rtbFullWordList.Font.Size;
+            UpdateLabels();
+            UpdateButtons();
             //CheckDuplicates();
         }
 
         private void btnRandom_Click(object sender, EventArgs e)
         {
-            if (Variables.words.Count != Variables.duplicates.Count)
+            if (playing)
             {
-                var word = "";
-                while (true)
+                if (Variables.words.Count != Variables.duplicates.Count)
                 {
-                    word = Variables.words[random.Next(0, Variables.words.Count)];
-                    if (Variables.duplicates.Contains(word))
-                        continue;
-                    break;
+                    var word = "";
+                    while (true)
+                    {
+                        word = Variables.words[random.Next(0, Variables.words.Count)];
+                        if (Variables.duplicates.Contains(word))
+                            continue;
+                        break;
+                    }
+                    tbRandomString.Text = word;
+                    Variables.duplicates.Add(word);
                 }
-                tbRandomString.Text = word;
-                Variables.duplicates.Add(word);
+                else
+                {
+                    tbRandomString.Text = "Keine Wörter mehr vorhanden";
+                    btnStartOrQuit.PerformClick();
+                }
+
+                UpdateLabels();
+
+                rtbFullWordList.Text = "";
+                var text = "";
+                foreach (var item in Variables.words)
+                {
+                    if (!Variables.duplicates.Contains(item))
+                        text += item + ", ";
+                }
+                if (Variables.duplicates.Count != Variables.words.Count)
+                {
+                    text = text.Substring(0, text.Length - 2);
+                    rtbFullWordList.Text = text;
+                }
             }
-            else
-                tbRandomString.Text = "Keine Wörter mehr vorhanden";
-            
         }
 
         private void OutputDuplicates()
@@ -64,9 +87,15 @@ namespace BingoWortGeber
 
         private void btnAddWord_Click(object sender, EventArgs e)
         {
-            if (!CheckDuplicate(tbAddWord.Text) && tbAddWord.Text.Length > 0)
-                Variables.words.Add(tbAddWord.Text);
-            tbAddWord.Text = "";
+            if (!playing)
+            {
+                if (!CheckDuplicate(tbAddWord.Text) && tbAddWord.Text.Length > 0)
+                    Variables.words.Add(tbAddWord.Text);
+                tbAddWord.Text = "";
+                if (rtbFullWordList.Text != "")
+                    btnGetStringPool.PerformClick();
+                UpdateLabels();
+            }
         }
 
         private void btnGetStringPool_Click(object sender, EventArgs e)
@@ -85,10 +114,26 @@ namespace BingoWortGeber
             }
         }
 
-        private void btnRestart_Click(object sender, EventArgs e)
+        private void btnStartOrQuit_Click(object sender, EventArgs e)
         {
-            Variables.duplicates = new List<string>();
-            tbRandomString.Text = "Spiel wurde zurückgesetzt";
+            if (!playing)
+            {
+                playing = true;
+                btnStartOrQuit.Text = "Spiel beenden";
+            }
+            else
+            {
+                playing = false;
+                Variables.duplicates = new List<string>();
+                tbRandomString.Text = "Spiel wurde beendet";
+                btnStartOrQuit.Text = "Spiel starten";
+                rtbFullWordList.Text = "";
+
+                tbAddWord.Text = "";
+            }
+            UpdateButtons();
+            
+            UpdateLabels();
         }
 
         private void ntbTextSize_ValueChanged(object sender, EventArgs e)
@@ -102,7 +147,43 @@ namespace BingoWortGeber
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
+        }
+
+        private void btnResetWords_Click(object sender, EventArgs e)
+        {
+            if (!playing)
+            {
+                for (int i = 60; i < Variables.words.Count; i++)
+                {
+                    Variables.words.RemoveAt(i);
+                    i--;
+                }
+                btnGetStringPool.PerformClick();
+                UpdateLabels();
+            }
+        }
+
+        void UpdateLabels()
+        {
+            lbCounter.Text = $"Wörter: {Variables.words.Count}";
+            lbRemainingWords.Text = $"Verbleibene Wörter: {Variables.words.Count - Variables.duplicates.Count}";
+        }
+
+        void UpdateButtons()
+        {
+            if (playing)
+            {
+                btnAddWord.BackColor = Color.FromArgb(187, 194, 194);
+                btnResetWords.BackColor = Color.FromArgb(187, 194, 194);
+                btnRandom.BackColor = Color.White;
+            }
+            else
+            {
+                btnAddWord.BackColor = Color.White;
+                btnResetWords.BackColor = Color.White;
+                btnRandom.BackColor = Color.FromArgb(187, 194, 194);
+            }
         }
     }
 }
