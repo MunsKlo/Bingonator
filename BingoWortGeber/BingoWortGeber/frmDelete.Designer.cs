@@ -161,7 +161,6 @@
             this.Controls.Add(this.pRightBorder);
             this.Controls.Add(this.pLeftBorder);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Location = new System.Drawing.Point(500, 500);
             this.Name = "frmDelete";
             this.Text = "frmDelete";
             this.pTitle.ResumeLayout(false);

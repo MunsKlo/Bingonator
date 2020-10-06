@@ -63,6 +63,7 @@
             this.btnAbort = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.tt1 = new System.Windows.Forms.ToolTip(this.components);
+            this.lbClose = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).BeginInit();
             this.pAddWord.SuspendLayout();
             this.pGetWord.SuspendLayout();
@@ -227,6 +228,7 @@
             this.tbAddWord.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.tbAddWord.Location = new System.Drawing.Point(2, 2);
             this.tbAddWord.Margin = new System.Windows.Forms.Padding(4);
+            this.tbAddWord.MaxLength = 128;
             this.tbAddWord.Name = "tbAddWord";
             this.tbAddWord.Size = new System.Drawing.Size(409, 31);
             this.tbAddWord.TabIndex = 2;
@@ -344,9 +346,10 @@
             this.lbMaxMin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbMaxMin.AutoSize = true;
             this.lbMaxMin.BackColor = System.Drawing.Color.Transparent;
+            this.lbMaxMin.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lbMaxMin.Font = new System.Drawing.Font("Arial", 15F);
             this.lbMaxMin.ForeColor = System.Drawing.Color.White;
-            this.lbMaxMin.Location = new System.Drawing.Point(921, -2);
+            this.lbMaxMin.Location = new System.Drawing.Point(900, 2);
             this.lbMaxMin.Margin = new System.Windows.Forms.Padding(0);
             this.lbMaxMin.Name = "lbMaxMin";
             this.lbMaxMin.Size = new System.Drawing.Size(25, 23);
@@ -359,9 +362,10 @@
             this.lbMaxNormal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbMaxNormal.AutoSize = true;
             this.lbMaxNormal.BackColor = System.Drawing.Color.Transparent;
+            this.lbMaxNormal.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lbMaxNormal.Font = new System.Drawing.Font("Arial", 15F);
             this.lbMaxNormal.ForeColor = System.Drawing.Color.White;
-            this.lbMaxNormal.Location = new System.Drawing.Point(949, -2);
+            this.lbMaxNormal.Location = new System.Drawing.Point(928, 2);
             this.lbMaxNormal.Name = "lbMaxNormal";
             this.lbMaxNormal.Size = new System.Drawing.Size(25, 23);
             this.lbMaxNormal.TabIndex = 17;
@@ -508,12 +512,28 @@
             this.tt1.ShowAlways = true;
             this.tt1.Tag = "lbSection";
             // 
+            // lbClose
+            // 
+            this.lbClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbClose.AutoSize = true;
+            this.lbClose.BackColor = System.Drawing.Color.Transparent;
+            this.lbClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lbClose.Font = new System.Drawing.Font("Arial", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbClose.ForeColor = System.Drawing.Color.White;
+            this.lbClose.Location = new System.Drawing.Point(952, 2);
+            this.lbClose.Name = "lbClose";
+            this.lbClose.Size = new System.Drawing.Size(25, 23);
+            this.lbClose.TabIndex = 27;
+            this.lbClose.Text = "🗙︎";
+            this.lbClose.Click += new System.EventHandler(this.lbClose_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(131)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(981, 636);
+            this.Controls.Add(this.lbClose);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnAbort);
             this.Controls.Add(this.pTitle);
@@ -594,6 +614,7 @@
         private System.Windows.Forms.Label lbSection;
         private System.Windows.Forms.ToolTip tt1;
         private System.Windows.Forms.Label lbSize;
+        private System.Windows.Forms.Label lbClose;
     }
 }
 

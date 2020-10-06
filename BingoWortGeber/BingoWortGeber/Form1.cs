@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ namespace BingoWortGeber
         Color notEnable = Color.FromArgb(187, 194, 194);
         Color enable = Color.White;
 
-        
+
 
         public frmMain()
         {
@@ -56,7 +57,31 @@ namespace BingoWortGeber
             }
             lbSection.Text = "";
 
+            SetToolTip();
+            SaveFont();
+        }
+
+        void SetToolTip()
+        {
             tt1.SetToolTip(btnAddWord, "Fügt ein Wort hinzu.");
+            tt1.SetToolTip(btnRandom, "Gibt ein zufälliges Wort aus dem Wörter-Pool aus.");
+            tt1.SetToolTip(btnGetStringPool, "Gibt alle Wörter des Pools aus.");
+            //tt1.SetToolTip(btnStartOrQuit, "Startet das Spiel oder beendet das laufende Spiel");
+            //tt1.SetToolTip(btnCreateList, "Fügt ein Wort hinzu.");
+            tt1.SetToolTip(btnAbort, "Bricht die Listenerstellung ab.");
+            tt1.SetToolTip(btnSave, "Speichert die Listen in einem Textdokument.");
+            tt1.SetToolTip(btnLoadFile, "Lädt die Listen aus einem Textdokument.");
+            tt1.SetToolTip(lbSize, "Bestimmt die Schriftgröße des Pools.");
+            tt1.SetToolTip(btnDelete, "Entfernt eine Wort aus dem Wort-Pool.");
+        }
+
+        private void SaveFont()
+        {
+            var pfc = new PrivateFontCollection();
+            pfc.AddFontFile(Path.Combine(Application.StartupPath, "arial.ttf"));
+            lbClose.Font = new Font(pfc.Families[0], 15, FontStyle.Regular);
+            lbMaxMin.Font = new Font(pfc.Families[0], 15, FontStyle.Regular);
+            lbMaxNormal.Font = new Font(pfc.Families[0], 15, FontStyle.Regular);
         }
 
         private void btnRandom_Click(object sender, EventArgs e)
@@ -110,25 +135,24 @@ namespace BingoWortGeber
             {
                 if (!playing)
                 {
-                    if (!CheckDuplicate(tbAddWord.Text) && tbAddWord.Text.Length > 0 && !creatingList)
-                        Variables.words.Add(tbAddWord.Text);
-                    else
+                    if (!CheckDuplicate(tbAddWord.Text) && tbAddWord.Text.Length > 0)
                         Variables.words.Add(tbAddWord.Text);
                     tbAddWord.Text = empty;
                     if (rtbFullWordList.Text != empty)
                         btnGetStringPool.PerformClick();
                     UpdateLabels();
                     FillField();
+                    tbAddWord.Focus();
                 }
             }
-            else
+            else if (!playing)
                 rtbFullWordList.Text = "Keine Liste vorhanden";
-            
+
         }
 
         private void btnGetStringPool_Click(object sender, EventArgs e)
         {
-            if(!creatingList)
+            if (!creatingList)
                 FillField();
         }
 
@@ -155,7 +179,7 @@ namespace BingoWortGeber
 
                 UpdateLabels();
             }
-            
+
         }
 
         private void ntbTextSize_ValueChanged(object sender, EventArgs e)
@@ -186,37 +210,52 @@ namespace BingoWortGeber
                 btnAddWord.BackColor = notEnable;
                 btnNewList.BackColor = notEnable;
                 btnRandom.BackColor = enable;
+                btnNewList.BackColor = notEnable;
+                btnSave.BackColor = notEnable;
+                btnLoadFile.BackColor = notEnable;
+                cbTopic.Enabled = false;
+                lbSection.BackColor = notEnable;
             }
             else
             {
                 btnAddWord.BackColor = enable;
                 btnNewList.BackColor = enable;
                 btnRandom.BackColor = notEnable;
-            }
-
-            if (creatingList)
-            {
-                btnRandom.BackColor = notEnable;
-                btnGetStringPool.BackColor = notEnable;
-                btnStartOrQuit.BackColor = notEnable;
-                btnSave.BackColor = notEnable;
-                btnLoadFile.BackColor = notEnable;
-                cbTopic.Enabled = false;
-                cbTopic.BackColor = notEnable;
-                btnAbort.Enabled = true;
-                btnAbort.BackColor = enable;
-            }
-            else
-            {
-                btnRandom.BackColor = enable;
-                btnGetStringPool.BackColor = enable;
-                btnStartOrQuit.BackColor = enable;
+                btnNewList.BackColor = enable;
                 btnSave.BackColor = enable;
                 btnLoadFile.BackColor = enable;
                 cbTopic.Enabled = true;
-                cbTopic.BackColor = enable;
-                btnAbort.BackColor = notEnable;
+                lbSection.BackColor = enable;
             }
+
+            if (!playing)
+            {
+                if (creatingList)
+                {
+                    btnRandom.BackColor = notEnable;
+                    btnGetStringPool.BackColor = notEnable;
+                    btnStartOrQuit.BackColor = notEnable;
+                    btnSave.BackColor = notEnable;
+                    btnLoadFile.BackColor = notEnable;
+                    cbTopic.Enabled = false;
+                    cbTopic.BackColor = notEnable;
+                    btnAbort.Enabled = true;
+                    btnAbort.BackColor = enable;
+                }
+                else
+                {
+                    btnRandom.BackColor = enable;
+                    btnGetStringPool.BackColor = enable;
+                    btnStartOrQuit.BackColor = enable;
+                    btnSave.BackColor = enable;
+                    btnLoadFile.BackColor = enable;
+                    cbTopic.Enabled = true;
+                    cbTopic.BackColor = enable;
+                    btnAbort.BackColor = notEnable;
+                }
+            }
+
+
         }
 
         private void lbMaxMin_Click(object sender, EventArgs e)
@@ -226,7 +265,7 @@ namespace BingoWortGeber
 
         private void lbMaxNormal_Click(object sender, EventArgs e)
         {
-            if(WindowState == FormWindowState.Normal)
+            if (WindowState == FormWindowState.Normal)
             {
                 WindowState = FormWindowState.Maximized;
             }
@@ -271,7 +310,7 @@ namespace BingoWortGeber
 
         private void btnLoadFile_Click(object sender, EventArgs e)
         {
-            if(!creatingList && !playing)
+            if (!creatingList && !playing)
             {
                 var filePath = empty;
                 var fileContent = empty;
@@ -325,22 +364,23 @@ namespace BingoWortGeber
             {
                 txt += path[i];
             }
-            if (txt == ".txt") 
+            if (txt == ".txt")
                 return true;
             else
                 return false;
-                
+
         }
 
         void FillFrmFromLoadFile(string content)
         {
-            content = content.Replace(" ", empty);
             var newContent = new Content();
             newContent.WordList = new List<string>();
             var word = empty;
             cbTopic.MaxLength = 9;
             foreach (var item in content)
             {
+                if (word.Length == 0 && item == ' ')
+                    continue;
                 if (item == ':' || item == ',')
                 {
                     newContent.WordList.Add(word);
@@ -385,7 +425,7 @@ namespace BingoWortGeber
 
         string ShortString(string newString)
         {
-            if(newString.Length > 11)
+            if (newString.Length > 11)
                 newString = newString.Substring(0, 11) + "...";
             return newString;
         }
@@ -419,13 +459,14 @@ namespace BingoWortGeber
                 }
                 else
                 {
-                    btnNewList.Text = "Neue Liste";
-                    creatingList = false;
                     var titleFrm = new frmTitle();
+                    titleFrm.StartPosition = FormStartPosition.CenterParent;
                     titleFrm.ShowDialog();
-                    var content = new Content();
-                    if(titleFrm.Title != null)
+                    if (titleFrm.Title != null)
                     {
+                        btnNewList.Text = "Neue Liste";
+                        creatingList = false;
+                        var content = new Content();
                         content = CreateContent(titleFrm.Title);
                         Variables.sections.Add(content);
                         Variables.titleSection = content.Title;
@@ -458,21 +499,24 @@ namespace BingoWortGeber
 
         private void btnAbort_Click(object sender, EventArgs e)
         {
-            rtbFullWordList.Text = empty;
-            creatingList = false;
-            btnNewList.Text = "Neue Liste";
-            UpdateButtons();
+            if (!playing)
+            {
+                rtbFullWordList.Text = empty;
+                creatingList = false;
+                btnNewList.Text = "Neue Liste";
+                UpdateButtons();
+            }
         }
 
         void SaveLists()
         {
-            using(SaveFileDialog saveFileDialog = new SaveFileDialog())
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.InitialDirectory = startPath;
                 saveFileDialog.Filter = "txt files (*.txt)|*.txt";
                 saveFileDialog.FilterIndex = 2;
                 saveFileDialog.RestoreDirectory = true;
-                if(saveFileDialog.ShowDialog() == DialogResult.OK)
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     File.WriteAllText(saveFileDialog.FileName, TxTContent());
                 }
@@ -486,7 +530,9 @@ namespace BingoWortGeber
             {
                 txtContent += ConcatWords(item);
             }
-            return txtContent.Substring(0, txtContent.Length - 1);
+            if (txtContent.Length > 0)
+                return txtContent.Substring(0, txtContent.Length - 1);
+            return empty;
         }
 
         string ConcatWords(Content content)
@@ -501,16 +547,21 @@ namespace BingoWortGeber
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveLists();
+            if (!creatingList && !playing)
+                SaveLists();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
             var frm = new frmDelete();
+            frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog();
             FillField();
-            var width = SystemInformation.VirtualScreen.Width;
-            var height = SystemInformation.VirtualScreen.Height;
+        }
+
+        private void lbClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

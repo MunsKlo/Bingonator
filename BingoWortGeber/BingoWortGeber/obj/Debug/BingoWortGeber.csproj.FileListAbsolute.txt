@@ -10,3 +10,4 @@ H:\Eigene Dateien\Visual Studio\BingoWortGeber\BingoWortGeber\obj\Debug\BingoWor
 H:\Eigene Dateien\Visual Studio\BingoWortGeber\BingoWortGeber\obj\Debug\BingoWortGeber.pdb
 H:\Eigene Dateien\Visual Studio\BingoWortGeber\BingoWortGeber\obj\Debug\BingoWortGeber.frmTitle.resources
 H:\Eigene Dateien\Visual Studio\BingoWortGeber\BingoWortGeber\obj\Debug\BingoWortGeber.frmDelete.resources
+H:\Eigene Dateien\Visual Studio\BingoWortGeber\BingoWortGeber\bin\Debug\arial.ttf
