@@ -62,17 +62,33 @@ namespace BingoWortGeber
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-            if (tbTitle.Text.Length > 0)
+            if (DuplicateTitle())
+            {
+                tbTitle.Text = string.Empty;
+                tbTitle.PlaceholderText = "Bereits vergeben!";
+            }
+            else if (tbTitle.Text.Length > 0)
             {
                 Title = tbTitle.Text;
                 Close();
             }
+            
             pTitle.BackColor = Color.Red;
         }
 
         private void tbTitle_TextChanged(object sender, EventArgs e)
         {
             pTitle.BackColor = Variables.blue;
+        }
+
+        bool DuplicateTitle()
+        {
+            foreach (var item in Variables.sections)
+            {
+                if (tbTitle.Text == item.Title)
+                    return true;
+            }
+            return false;
         }
     }
 }

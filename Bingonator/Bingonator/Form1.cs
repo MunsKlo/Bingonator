@@ -72,7 +72,8 @@ namespace BingoWortGeber
                 btnSave,
                 btnLoadFile,
                 btnNewList,
-                btnDelete
+                btnDelete,
+                btnDeleteList
             };
 
             Variables.createButtons = new List<Button>
@@ -81,7 +82,8 @@ namespace BingoWortGeber
                 btnStartOrQuit,
                 btnSave,
                 btnLoadFile,
-                btnRandom
+                btnRandom,
+                btnDeleteList
             };
 
             Variables.menuButtons = new List<Button>
@@ -98,7 +100,8 @@ namespace BingoWortGeber
                 btnStartOrQuit,
                 btnAbort,
                 btnSave,
-                btnDelete
+                btnDelete,
+                btnDeleteList
             };
         }
 
@@ -252,16 +255,25 @@ namespace BingoWortGeber
             {
                 rtbFullWordList.Font = new Font(rtbFullWordList.Font.FontFamily.Name, numb, FontStyle.Bold);
             }
-            lbSize.Text = ntbTextSize.Value.ToString();
+            UpdateLabels();
         }
 
         void UpdateComboBox()
         {
-            cbTopic.SelectedIndex = cbTopic.FindStringExact(Variables.titleSection);
+            if (Variables.sections.Count > 0)
+                cbTopic.SelectedIndex = cbTopic.FindStringExact(Variables.titleSection);
+            else
+            {
+                cbTopic.SelectedIndex = -1;
+                cbTopic.Refresh();
+            }
+                
         }
 
         void UpdateLabels()
         {
+            lbSize.Text = ntbTextSize.Value.ToString();
+            lbSection.Text = ShortString(Variables.titleSection);
             lbCounter.Text = $"Wörter: {Variables.words.Count}";
             lbRemainingWords.Text = $"Verbleibene Wörter: {Variables.words.Count - Variables.duplicates.Count}";
         }
@@ -419,6 +431,8 @@ namespace BingoWortGeber
                     rtbFullWordList.Text = text;
                 }
             }
+            if (Variables.sections.Count < 1)
+                rtbFullWordList.Text = empty;
             
         }
 
@@ -558,12 +572,15 @@ namespace BingoWortGeber
                 var content = GetRightContent(cbTopic.Text);
                 Variables.words = content.WordList;
                 Variables.titleSection = content.Title;
-                lbSection.Text = ShortString(Variables.titleSection);
                 tt1.SetToolTip(lbSection, Variables.titleSection);
                 FillField(true);
-                UpdateLabels();
                 SetTimer();
             }
+            else
+            {
+                Variables.titleSection = empty;
+            }
+            UpdateLabels();
         }
 
         private void btnAbort_Click(object sender, EventArgs e)
@@ -622,10 +639,14 @@ namespace BingoWortGeber
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            var frm = new frmDelete();
-            frm.StartPosition = FormStartPosition.CenterParent;
-            frm.ShowDialog();
-            FillField(true);
+            if(btnDelete.BackColor == enable)
+            {
+                var frm = new frmDelete();
+                frm.StartPosition = FormStartPosition.CenterParent;
+                frm.ShowDialog();
+                FillField(true);
+            }
+            
         }
 
         private void lbClose_Click(object sender, EventArgs e)
@@ -635,16 +656,19 @@ namespace BingoWortGeber
 
         private void tPoolWords_Tick(object sender, EventArgs e)
         {
-            while (true)
+            if(Variables.words.Count > 0)
             {
-                var word = Variables.words[random.Next(0, Variables.words.Count)];
-                if (word != tbRandomString.PlaceholderText)
+                while (true)
                 {
-                    tbRandomString.PlaceholderText = word;
-                    break;
+                    var word = Variables.words[random.Next(0, Variables.words.Count)];
+                    if (word != tbRandomString.PlaceholderText)
+                    {
+                        tbRandomString.PlaceholderText = word;
+                        break;
+                    }
+                    if (Variables.words.Count < 2)
+                        break;
                 }
-                if (Variables.words.Count < 2)
-                    break;
             }
         }
 
@@ -662,6 +686,28 @@ namespace BingoWortGeber
                 .Replace(":", empty);
             tbAddWord.SelectionStart = posCursor;
             
+        }
+
+        private void btnDeleteList_Click(object sender, EventArgs e)
+        {
+            if(btnDeleteList.BackColor == enable)
+            {
+                var frm = new frmDelete(false);
+                frm.StartPosition = FormStartPosition.CenterParent;
+                frm.ShowDialog();
+                FillField(true);
+                cbTopic.Items.Remove(frm.Title);
+                UpdateComboBox();
+                if (Variables.sections.Count > 0)
+                    cbTopic.SelectedIndex = 0;
+                else
+                {
+                    lbSection.Text = empty;
+                    UpdateButtons();
+                }
+                FillField(true);
+                UpdateLabels();
+            }
         }
     }
 }

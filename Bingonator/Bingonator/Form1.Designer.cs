@@ -37,7 +37,6 @@
             this.lbTitle = new System.Windows.Forms.Label();
             this.btnStartOrQuit = new System.Windows.Forms.Button();
             this.lbTextSize = new System.Windows.Forms.Label();
-            this.btnDelete = new System.Windows.Forms.Button();
             this.ntbTextSize = new System.Windows.Forms.NumericUpDown();
             this.pAddWord = new System.Windows.Forms.Panel();
             this.tbAddWord = new System.Windows.Forms.TextBox();
@@ -65,6 +64,8 @@
             this.tt1 = new System.Windows.Forms.ToolTip(this.components);
             this.lbClose = new System.Windows.Forms.Label();
             this.tPoolWords = new System.Windows.Forms.Timer(this.components);
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnDeleteList = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).BeginInit();
             this.pAddWord.SuspendLayout();
             this.pGetWord.SuspendLayout();
@@ -93,16 +94,18 @@
             // 
             // rtbFullWordList
             // 
+            this.rtbFullWordList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbFullWordList.BackColor = System.Drawing.Color.White;
             this.rtbFullWordList.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbFullWordList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtbFullWordList.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.rtbFullWordList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.rtbFullWordList.Location = new System.Drawing.Point(2, 2);
             this.rtbFullWordList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.rtbFullWordList.Name = "rtbFullWordList";
             this.rtbFullWordList.ReadOnly = true;
-            this.rtbFullWordList.Size = new System.Drawing.Size(922, 568);
+            this.rtbFullWordList.Size = new System.Drawing.Size(922, 660);
             this.rtbFullWordList.TabIndex = 2;
             this.rtbFullWordList.TabStop = false;
             this.rtbFullWordList.Text = "";
@@ -174,34 +177,17 @@
             // 
             // lbTextSize
             // 
+            this.lbTextSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbTextSize.AutoSize = true;
             this.lbTextSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lbTextSize.ForeColor = System.Drawing.Color.White;
-            this.lbTextSize.Location = new System.Drawing.Point(12, 470);
+            this.lbTextSize.Location = new System.Drawing.Point(12, 735);
             this.lbTextSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbTextSize.Name = "lbTextSize";
             this.lbTextSize.Size = new System.Drawing.Size(157, 29);
             this.lbTextSize.TabIndex = 9;
             this.lbTextSize.Text = "Schriftgröße";
             this.lbTextSize.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDelete.BackColor = System.Drawing.Color.White;
-            this.btnDelete.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.btnDelete.FlatAppearance.BorderSize = 2;
-            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnDelete.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.btnDelete.Location = new System.Drawing.Point(16, 680);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(178, 40);
-            this.btnDelete.TabIndex = 5;
-            this.btnDelete.Text = "Wort entfernen";
-            this.btnDelete.UseVisualStyleBackColor = false;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // ntbTextSize
             // 
@@ -287,7 +273,7 @@
             this.pWordList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pWordList.Name = "pWordList";
             this.pWordList.Padding = new System.Windows.Forms.Padding(2, 2, 2, 40);
-            this.pWordList.Size = new System.Drawing.Size(926, 610);
+            this.pWordList.Size = new System.Drawing.Size(926, 706);
             this.pWordList.TabIndex = 15;
             // 
             // lbRemainingWords
@@ -295,12 +281,12 @@
             this.lbRemainingWords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbRemainingWords.AutoSize = true;
             this.lbRemainingWords.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.lbRemainingWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lbRemainingWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lbRemainingWords.ForeColor = System.Drawing.Color.White;
-            this.lbRemainingWords.Location = new System.Drawing.Point(6, 580);
+            this.lbRemainingWords.Location = new System.Drawing.Point(6, 674);
             this.lbRemainingWords.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbRemainingWords.Name = "lbRemainingWords";
-            this.lbRemainingWords.Size = new System.Drawing.Size(35, 17);
+            this.lbRemainingWords.Size = new System.Drawing.Size(40, 20);
             this.lbRemainingWords.TabIndex = 4;
             this.lbRemainingWords.Text = "test";
             // 
@@ -309,21 +295,22 @@
             this.lbCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbCounter.AutoSize = true;
             this.lbCounter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
-            this.lbCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lbCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lbCounter.ForeColor = System.Drawing.Color.White;
-            this.lbCounter.Location = new System.Drawing.Point(798, 580);
+            this.lbCounter.Location = new System.Drawing.Point(798, 674);
             this.lbCounter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbCounter.Name = "lbCounter";
-            this.lbCounter.Size = new System.Drawing.Size(35, 17);
+            this.lbCounter.Size = new System.Drawing.Size(40, 20);
             this.lbCounter.TabIndex = 3;
             this.lbCounter.Text = "test";
             // 
             // pTextSize
             // 
+            this.pTextSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pTextSize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.pTextSize.Controls.Add(this.lbSize);
             this.pTextSize.Controls.Add(this.ntbTextSize);
-            this.pTextSize.Location = new System.Drawing.Point(14, 507);
+            this.pTextSize.Location = new System.Drawing.Point(14, 772);
             this.pTextSize.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pTextSize.Name = "pTextSize";
             this.pTextSize.Padding = new System.Windows.Forms.Padding(2);
@@ -407,7 +394,7 @@
             // 
             this.pBottomBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.pBottomBorder.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pBottomBorder.Location = new System.Drawing.Point(0, 732);
+            this.pBottomBorder.Location = new System.Drawing.Point(0, 828);
             this.pBottomBorder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pBottomBorder.Name = "pBottomBorder";
             this.pBottomBorder.Size = new System.Drawing.Size(1144, 2);
@@ -420,7 +407,7 @@
             this.pRightBorder.Location = new System.Drawing.Point(1142, 2);
             this.pRightBorder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pRightBorder.Name = "pRightBorder";
-            this.pRightBorder.Size = new System.Drawing.Size(2, 730);
+            this.pRightBorder.Size = new System.Drawing.Size(2, 826);
             this.pRightBorder.TabIndex = 22;
             // 
             // pLeftBorder
@@ -430,17 +417,17 @@
             this.pLeftBorder.Location = new System.Drawing.Point(0, 2);
             this.pLeftBorder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pLeftBorder.Name = "pLeftBorder";
-            this.pLeftBorder.Size = new System.Drawing.Size(2, 730);
+            this.pLeftBorder.Size = new System.Drawing.Size(2, 826);
             this.pLeftBorder.TabIndex = 23;
             // 
             // pbLogo
             // 
             this.pbLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pbLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbLogo.Image")));
-            this.pbLogo.Location = new System.Drawing.Point(48, 557);
+            this.pbLogo.Location = new System.Drawing.Point(42, 606);
             this.pbLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pbLogo.Name = "pbLogo";
-            this.pbLogo.Size = new System.Drawing.Size(117, 115);
+            this.pbLogo.Size = new System.Drawing.Size(110, 110);
             this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbLogo.TabIndex = 5;
             this.pbLogo.TabStop = false;
@@ -565,13 +552,49 @@
             this.tPoolWords.Interval = 500;
             this.tPoolWords.Tick += new System.EventHandler(this.tPoolWords_Tick);
             // 
+            // btnDelete
+            // 
+            this.btnDelete.BackColor = System.Drawing.Color.White;
+            this.btnDelete.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnDelete.FlatAppearance.BorderSize = 2;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnDelete.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnDelete.Location = new System.Drawing.Point(14, 504);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(178, 40);
+            this.btnDelete.TabIndex = 5;
+            this.btnDelete.Text = "Wort entfernen";
+            this.btnDelete.UseVisualStyleBackColor = false;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnDeleteList
+            // 
+            this.btnDeleteList.BackColor = System.Drawing.Color.White;
+            this.btnDeleteList.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnDeleteList.FlatAppearance.BorderSize = 2;
+            this.btnDeleteList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteList.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnDeleteList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.btnDeleteList.Location = new System.Drawing.Point(14, 550);
+            this.btnDeleteList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnDeleteList.Name = "btnDeleteList";
+            this.btnDeleteList.Size = new System.Drawing.Size(178, 40);
+            this.btnDeleteList.TabIndex = 5;
+            this.btnDeleteList.Text = "Liste entfernen";
+            this.btnDeleteList.UseVisualStyleBackColor = false;
+            this.btnDeleteList.Click += new System.EventHandler(this.btnDeleteList_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(131)))), ((int)(((byte)(0)))));
-            this.ClientSize = new System.Drawing.Size(1144, 734);
+            this.ClientSize = new System.Drawing.Size(1144, 830);
+            this.Controls.Add(this.btnDeleteList);
             this.Controls.Add(this.lbClose);
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnAbort);
             this.Controls.Add(this.pTitle);
@@ -588,7 +611,6 @@
             this.Controls.Add(this.pWordList);
             this.Controls.Add(this.pAddWord);
             this.Controls.Add(this.pGetWord);
-            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.lbTextSize);
             this.Controls.Add(this.btnStartOrQuit);
             this.Controls.Add(this.lbTitle);
@@ -627,7 +649,6 @@
         private System.Windows.Forms.Label lbTitle;
         private System.Windows.Forms.Button btnStartOrQuit;
         private System.Windows.Forms.Label lbTextSize;
-        private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.NumericUpDown ntbTextSize;
         private System.Windows.Forms.Panel pAddWord;
         private System.Windows.Forms.TextBox tbAddWord;
@@ -655,6 +676,8 @@
         private System.Windows.Forms.Label lbSize;
         private System.Windows.Forms.Label lbClose;
         private System.Windows.Forms.Timer tPoolWords;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnDeleteList;
     }
 }
 

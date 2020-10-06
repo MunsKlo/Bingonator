@@ -12,11 +12,16 @@ namespace BingoWortGeber
 {
     public partial class frmDelete : Form
     {
+        public string Title { get; set; }
+
+
         bool dragging = false;
         Point dragCursorPoint;
         Point dragFrmPoint;
-        public frmDelete()
+        bool isWordDelete;
+        public frmDelete(bool isWordDelete = true)
         {
+            this.isWordDelete = isWordDelete;
             InitializeComponent();
 
             MouseUp += (o, e) => { MouseDragDown(); };
@@ -29,6 +34,10 @@ namespace BingoWortGeber
                 label.MouseDown += (o, e) => { MouseDragUp(); };
                 label.MouseMove += (o, e) => { MouseMoving(); };
             }
+            if (!isWordDelete)
+            {
+                lbDelete.Text = "Liste löschen:";
+            }
             FillComboBox();
             if(cbWord.Items.Count > 0)
                 cbWord.SelectedIndex = 0;
@@ -36,10 +45,21 @@ namespace BingoWortGeber
 
         void FillComboBox()
         {
-            foreach (var item in Variables.words)
+            if (isWordDelete)
             {
-                cbWord.Items.Add(item);
+                foreach (var item in Variables.words)
+                {
+                    cbWord.Items.Add(item);
+                }
             }
+            else
+            {
+                foreach (var item in Variables.sections)
+                {
+                    cbWord.Items.Add(item.Title);
+                }
+            }
+            
         }
 
         void MouseDragUp()
@@ -70,11 +90,17 @@ namespace BingoWortGeber
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if(cbWord.Text == string.Empty)
+            if (cbWord.Text == string.Empty)
                 pTitle.BackColor = Color.Red;
-            else
+            else if (isWordDelete)
             {
                 Variables.words.Remove(cbWord.Text);
+                Close();
+            }
+            else
+            {
+                Title = cbWord.Text;
+                Variables.sections.Remove(GetContent());
                 Close();
             }
         }
@@ -84,6 +110,19 @@ namespace BingoWortGeber
         {
             pTitle.BackColor = Variables.blue;
             lbDelete.Focus();
+        }
+
+        Content GetContent()
+        {
+            var content = new Content();
+            foreach (var item in Variables.sections)
+            {
+                if(cbWord.Text == item.Title)
+                {
+                    content = item;
+                }
+            }
+            return content;
         }
     }
 }
