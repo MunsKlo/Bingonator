@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 using System.Windows.Forms;
 
 namespace BingoWortGeber
@@ -12,16 +14,27 @@ namespace BingoWortGeber
 
     public partial class frmMain : Form
     {
-        string empty = string.Empty;
-
         Random random = new Random();
+
+        const int minSize = 20;
+        const int maxSize = 100;
+
+        int standardWidth;
+        int standardHeight; 
 
         bool playing = false;
         bool dragging = false;
         bool creatingList = false;
+        bool resize = false;
+
+        int borderBottom;
+        int borderRight;
 
         Point dragCursorPoint;
         Point dragFrmPoint;
+
+        const int originalLocationLabelX = 24;
+        const int originalLocationLabelY = 594;
 
         int index = 1;
 
@@ -35,6 +48,10 @@ namespace BingoWortGeber
         public frmMain()
         {
             InitializeComponent();
+
+            standardWidth = Width;
+            standardHeight = Height;
+
             ntbTextSize.Value = (int)rtbFullWordList.Font.Size;
             lbSize.Text = rtbFullWordList.Font.Size.ToString();
             cbTopic.BackColor = Color.White;
@@ -47,16 +64,30 @@ namespace BingoWortGeber
             MouseDown += (o, e) => { MouseDragUp(); };
             MouseMove += (o, e) => { MouseMoving(); };
 
-            pbLogo.MouseUp += (o, e) => { MouseDragDown(); };
-            pbLogo.MouseDown += (o, e) => { MouseDragUp(); };
-            pbLogo.MouseMove += (o, e) => { MouseMoving(); };
-
             foreach (var label in Controls.OfType<Label>())
             {
                 label.MouseUp += (o, e) => { MouseDragDown(); };
                 label.MouseDown += (o, e) => { MouseDragUp(); };
                 label.MouseMove += (o, e) => { MouseMoving(); };
             }
+
+            foreach (var panel in Controls.OfType<Panel>())
+            {
+                panel.MouseUp += (o, e) => { resize = false; };
+                panel.MouseDown += (o, e) =>
+                {
+                    resize = true; 
+                    dragCursorPoint = Cursor.Position; 
+                    borderRight = Location.X + Width;
+                    borderBottom = Location.Y + Height;
+                };
+            }
+
+            pRightBorder.MouseMove += (o, e) => { MouseMoving("r"); };
+            pLeftBorder.MouseMove += (o, e) => { MouseMoving("l"); };
+            pTopBorder.MouseMove += (o, e) => { MouseMoving("u"); };
+            pBottomBorder.MouseMove += (o, e) => { MouseMoving("d"); };
+
             lbSection.Text = "";
             tbAddWord.PlaceholderText = "Wort eingeben...";
             SetToolTip();
@@ -89,7 +120,8 @@ namespace BingoWortGeber
             Variables.menuButtons = new List<Button>
             {
                 btnRandom,
-                btnAbort
+                btnAbort,
+                btnGetStringPool
             };
 
             Variables.noListButtons = new List<Button>
@@ -147,7 +179,7 @@ namespace BingoWortGeber
                 SetTimer();
                 if (Variables.words.Count != Variables.duplicates.Count)
                 {
-                    var word = empty;
+                    var word = string.Empty;
                     while (true)
                     {
                         word = Variables.words[random.Next(0, Variables.words.Count)];
@@ -192,8 +224,8 @@ namespace BingoWortGeber
                 {
                     if (!CheckDuplicate(tbAddWord.Text) && tbAddWord.Text.Length > 0)
                         Variables.words.Add(tbAddWord.Text);
-                    tbAddWord.Text = empty;
-                    if (rtbFullWordList.Text != empty)
+                    tbAddWord.Text = string.Empty;
+                    if (rtbFullWordList.Text != string.Empty)
                         btnGetStringPool.PerformClick();
                     UpdateLabels();
                     FillField(true);
@@ -212,7 +244,7 @@ namespace BingoWortGeber
                 if (btnGetStringPool.Text == "Alle Wörter ausgeben")
                 {
                     FillField(true);
-                    btnGetStringPool.Text = "Wörter-Pool zeigen";
+                    btnGetStringPool.Text = Variables.duplicates.Count > 0 ? "Wörter-Pool zeigen" : "Alle Wörter ausgeben";
                 }
                 else
                 {
@@ -238,9 +270,9 @@ namespace BingoWortGeber
                     tbRandomString.Text = "";
                     tbRandomString.PlaceholderText = "Spiel wurde beendet";
                     btnStartOrQuit.Text = "Spiel starten";
-                    rtbFullWordList.Text = empty;
+                    rtbFullWordList.Text = string.Empty;
 
-                    tbAddWord.Text = empty;
+                    tbAddWord.Text = string.Empty;
                 }
                 UpdateButtons();
                 UpdateLabels();
@@ -251,7 +283,7 @@ namespace BingoWortGeber
         private void ntbTextSize_ValueChanged(object sender, EventArgs e)
         {
             var numb = (int)ntbTextSize.Value;
-            if (numb < 100 && numb > 0)
+            if (numb < maxSize && numb > minSize)
             {
                 rtbFullWordList.Font = new Font(rtbFullWordList.Font.FontFamily.Name, numb, FontStyle.Bold);
             }
@@ -285,6 +317,7 @@ namespace BingoWortGeber
                 button.BackColor = enable;
             }
             cbTopic.Enabled = true;
+            tbAddWord.ReadOnly = false;
             lbSection.BackColor = enable;
             //Programm ohne Listen
             if (cbTopic.SelectedIndex == -1 && !creatingList)
@@ -305,6 +338,7 @@ namespace BingoWortGeber
             {
                 DisableButtons(Variables.playButtons);
                 cbTopic.Enabled = false;
+                tbAddWord.ReadOnly = true;
                 lbSection.BackColor = notEnable;
             }
             //Programm normal im Menü
@@ -330,6 +364,12 @@ namespace BingoWortGeber
         private void lbMaxNormal_Click(object sender, EventArgs e)
         {
             WindowState = WindowState == FormWindowState.Normal ? FormWindowState.Maximized : FormWindowState.Normal;
+            if(WindowState == FormWindowState.Normal)
+            {
+                Width = standardWidth;
+                Height = standardHeight;
+                CenterToScreen();
+            }
         }
 
         private void frmMain_Resize(object sender, EventArgs e)
@@ -337,40 +377,167 @@ namespace BingoWortGeber
             if (WindowState == FormWindowState.Normal)
             {
                 lbMaxNormal.Text = "🗖";
+
+                lbLogo.Location = new Point(originalLocationLabelX, originalLocationLabelY);
             }
             else
             {
                 lbMaxNormal.Text = "🗗";
+
+                var posButton = btnDeleteList.Location;
+                var posLabel = lbSize.Location;
+
+                var posLogo = posButton.Y - posLabel.Y;
+
+                lbLogo.Location = new Point(lbLogo.Location.X, posLogo + lbLogo.Height);
+            }
+
+            if (lbTitle.Location.X - (tbAddWord.Location.X + tbAddWord.Width) < 80 + lbLogo.Width)
+            {
+                lbTitle.Visible = false;
+            }
+            else
+            {
+                lbTitle.Visible = true;
             }
         }
 
         void MouseDragUp()
         {
-            dragging = true;
             dragCursorPoint = Cursor.Position;
             dragFrmPoint = Location;
+
+            
+            
+            dragging = true;
         }
 
         void MouseDragDown()
         {
             dragging = false;
+
+            var posMouse = Cursor.Position;
+
+            if (posMouse.X == 0)
+            {
+                Location = new Point(0, 0);
+                Width = Screen.PrimaryScreen.Bounds.Width / 2;
+                Height = Screen.PrimaryScreen.Bounds.Height - 40;
+            }
+
+            if(posMouse.X == Screen.AllScreens[0].Bounds.Width - 1)
+            {
+                Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2, 0);
+                Width = Screen.PrimaryScreen.Bounds.Width / 2;
+                Height = Screen.PrimaryScreen.Bounds.Height - 40;
+            }
+
+            if(posMouse.Y == 0)
+            {
+                WindowState = FormWindowState.Maximized;
+            }
         }
 
-        void MouseMoving()
+        void MouseMoving(string direction = "")
         {
-            if (dragging)
+            lbCounter.Text = Cursor.Position.X.ToString();
+            lbRemainingWords.Text = Cursor.Position.Y.ToString();
+            if (WindowState == FormWindowState.Maximized && dragging)
+            {
+                dragging = false;
+
+                var partX = (double)Cursor.Position.X / Width;
+                var partY = (double)Cursor.Position.Y / Height;
+
+                var oldY = Location.Y;
+                var oldX = Location.X;
+
+                WindowState = FormWindowState.Normal;
+                Width = standardWidth;
+                Height = standardHeight;
+                CenterToScreen();
+
+                Cursor.Position = new Point((int)(Width * partX) + (Location.X + oldX), (int)(Height * partY) + (Location.Y + oldY));
+                MouseDragUp();
+            }
+            else if (dragging)
             {
                 Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
                 Location = Point.Add(dragFrmPoint, new Size(dif));
             }
+
+
+            //Vergändern der größe vom Fenster
+            if (resize)
+            {
+                //Rechts
+                if (direction == "r")
+                {
+                    var dif = Cursor.Position.X - dragCursorPoint.X;
+                    Width += dif;
+                    Cursor.Position = new Point(Location.X + Width, Cursor.Position.Y);
+                }
+                //Links
+                if (direction == "l")
+                {
+                    var dif = Cursor.Position.X - dragCursorPoint.X;
+                    var left = dif > 0 ? false : true;
+
+                    if(Width == MinimumSize.Width && left)
+                    {
+                        Location = new Point(Location.X, Location.Y);
+                        Width -= dif;
+                    }
+                    else if (Width > MinimumSize.Width)
+                    {
+                        Location = new Point(Location.X + dif, Location.Y);
+                        Width -= dif;
+                    }
+                    if(Location.X + Width != borderRight)
+                    {
+                        Location = new Point(borderRight - Width, Location.Y);
+                    }
+                    Cursor.Position = new Point(Location.X, Cursor.Position.Y);
+                }
+                //Oben
+                if(direction == "u")
+                {
+                    var dif = Cursor.Position.Y - dragCursorPoint.Y;
+                    var top = dif > 0 ? false : true;
+                    if (Height > MinimumSize.Height || top)
+                    {
+                        Location = new Point(Location.X, Location.Y + dif);
+                        Height -= dif;
+                    }
+                    else if (Width > MinimumSize.Width)
+                    {
+                        Location = new Point(Location.X, Location.Y + dif);
+                        Height -= dif;
+                    }
+                    if (Location.Y + Width != borderBottom)
+                    {
+                        Location = new Point(Location.X, borderBottom -  Height);
+                    }
+                    Cursor.Position = new Point(Cursor.Position.X, Location.Y);
+                }
+                //Unten
+                if(direction == "d")
+                {
+                    var dif = Cursor.Position.Y - dragCursorPoint.Y;
+                    Height += dif;
+                    Cursor.Position = new Point(Cursor.Position.X, Location.Y + Height);
+                }
+                dragCursorPoint = Cursor.Position;
+            }
+            
         }
 
         private void btnLoadFile_Click(object sender, EventArgs e)
         {
             if (!creatingList && !playing)
             {
-                var filePath = empty;
-                var fileContent = empty;
+                var filePath = string.Empty;
+                var fileContent = string.Empty;
                 var content = new Content();
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
@@ -403,7 +570,7 @@ namespace BingoWortGeber
         {
             if (all)
             {
-                rtbFullWordList.Text = empty;
+                rtbFullWordList.Text = string.Empty;
                 foreach (var item in Variables.words)
                 {
                     if (Variables.words[Variables.words.Count - 1] == item)
@@ -418,8 +585,8 @@ namespace BingoWortGeber
             }
             else
             {
-                rtbFullWordList.Text = empty;
-                var text = empty;
+                rtbFullWordList.Text = string.Empty;
+                var text = string.Empty;
                 foreach (var item in Variables.words)
                 {
                     if (!Variables.duplicates.Contains(item))
@@ -431,14 +598,14 @@ namespace BingoWortGeber
                     rtbFullWordList.Text = text;
                 }
             }
-            if (Variables.sections.Count < 1)
-                rtbFullWordList.Text = empty;
+            if (Variables.words.Count < 1)
+                rtbFullWordList.Text = string.Empty;
             
         }
 
         bool IsItTxt(string path)
         {
-            var txt = empty;
+            var txt = string.Empty;
             for (int i = path.Length - 4; i < path.Length; i++)
             {
                 txt += path[i];
@@ -454,7 +621,7 @@ namespace BingoWortGeber
         {
             var newContent = new Content();
             newContent.WordList = new List<string>();
-            var word = empty;
+            var word = string.Empty;
             cbTopic.MaxLength = 9;
             foreach (var item in content)
             {
@@ -463,12 +630,12 @@ namespace BingoWortGeber
                 if (item == ':' || item == ',')
                 {
                     newContent.WordList.Add(word);
-                    word = empty;
+                    word = string.Empty;
                 }
                 else if (item == ';' && newContent.WordList.Count == 0)
                 {
                     newContent.Title = word;
-                    word = empty;
+                    word = string.Empty;
                 }
                 else if (item == ';' && newContent.WordList.Count != 0)
                 {
@@ -481,7 +648,7 @@ namespace BingoWortGeber
                     newContent = new Content();
                     newContent.WordList = new List<string>();
                     newContent.Title = word;
-                    word = empty;
+                    word = string.Empty;
                 }
                 else
                     word += item;
@@ -534,8 +701,8 @@ namespace BingoWortGeber
                     UpdateButtons();
                     Variables.words = new List<string>();
                     btnNewList.Text = "Liste hinzufügen";
-                    rtbFullWordList.Text = empty;
-                    tbAddWord.Text = empty;
+                    rtbFullWordList.Text = string.Empty;
+                    tbAddWord.Text = string.Empty;
                     tbAddWord.Focus();
                 }
                 else
@@ -578,7 +745,7 @@ namespace BingoWortGeber
             }
             else
             {
-                Variables.titleSection = empty;
+                Variables.titleSection = string.Empty;
             }
             UpdateLabels();
         }
@@ -587,7 +754,7 @@ namespace BingoWortGeber
         {
             if (!playing)
             {
-                rtbFullWordList.Text = empty;
+                rtbFullWordList.Text = string.Empty;
                 creatingList = false;
                 btnNewList.Text = "Neue Liste";
                 UpdateButtons();
@@ -611,14 +778,14 @@ namespace BingoWortGeber
 
         string TxTContent()
         {
-            var txtContent = empty;
+            var txtContent = string.Empty;
             foreach (var item in Variables.sections)
             {
                 txtContent += ConcatWords(item);
             }
             if (txtContent.Length > 0)
                 return txtContent.Substring(0, txtContent.Length - 1);
-            return empty;
+            return string.Empty;
         }
 
         string ConcatWords(Content content)
@@ -681,9 +848,9 @@ namespace BingoWortGeber
         {
             var posCursor = tbAddWord.SelectionStart;
             tbAddWord.Text = tbAddWord.Text
-                .Replace(";", empty)
-                .Replace(",", empty)
-                .Replace(":", empty);
+                .Replace(";", string.Empty)
+                .Replace(",", string.Empty)
+                .Replace(":", string.Empty);
             tbAddWord.SelectionStart = posCursor;
             
         }
@@ -695,19 +862,28 @@ namespace BingoWortGeber
                 var frm = new frmDelete(false);
                 frm.StartPosition = FormStartPosition.CenterParent;
                 frm.ShowDialog();
-                FillField(true);
                 cbTopic.Items.Remove(frm.Title);
                 UpdateComboBox();
                 if (Variables.sections.Count > 0)
+                {
                     cbTopic.SelectedIndex = 0;
+                }
                 else
                 {
-                    lbSection.Text = empty;
+                    Variables.words = new List<string>();
+                    Variables.titleSection = string.Empty;
+                    lbSection.Text = string.Empty;
                     UpdateButtons();
                 }
                 FillField(true);
                 UpdateLabels();
             }
+        }
+
+        private void lbSection_Click(object sender, EventArgs e)
+        {
+            if(cbTopic.SelectedIndex != -1)
+                cbTopic.DroppedDown = true;
         }
     }
 }

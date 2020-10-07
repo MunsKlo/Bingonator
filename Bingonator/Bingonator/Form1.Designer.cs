@@ -54,7 +54,6 @@
             this.pBottomBorder = new System.Windows.Forms.Panel();
             this.pRightBorder = new System.Windows.Forms.Panel();
             this.pLeftBorder = new System.Windows.Forms.Panel();
-            this.pbLogo = new System.Windows.Forms.PictureBox();
             this.btnLoadFile = new System.Windows.Forms.Button();
             this.pTitle = new System.Windows.Forms.Panel();
             this.lbSection = new System.Windows.Forms.Label();
@@ -66,12 +65,12 @@
             this.tPoolWords = new System.Windows.Forms.Timer(this.components);
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnDeleteList = new System.Windows.Forms.Button();
+            this.lbLogo = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).BeginInit();
             this.pAddWord.SuspendLayout();
             this.pGetWord.SuspendLayout();
             this.pWordList.SuspendLayout();
             this.pTextSize.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.pTitle.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -105,7 +104,7 @@
             this.rtbFullWordList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.rtbFullWordList.Name = "rtbFullWordList";
             this.rtbFullWordList.ReadOnly = true;
-            this.rtbFullWordList.Size = new System.Drawing.Size(922, 660);
+            this.rtbFullWordList.Size = new System.Drawing.Size(922, 665);
             this.rtbFullWordList.TabIndex = 2;
             this.rtbFullWordList.TabStop = false;
             this.rtbFullWordList.Text = "";
@@ -181,7 +180,7 @@
             this.lbTextSize.AutoSize = true;
             this.lbTextSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lbTextSize.ForeColor = System.Drawing.Color.White;
-            this.lbTextSize.Location = new System.Drawing.Point(12, 735);
+            this.lbTextSize.Location = new System.Drawing.Point(12, 740);
             this.lbTextSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbTextSize.Name = "lbTextSize";
             this.lbTextSize.Size = new System.Drawing.Size(157, 29);
@@ -273,7 +272,7 @@
             this.pWordList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pWordList.Name = "pWordList";
             this.pWordList.Padding = new System.Windows.Forms.Padding(2, 2, 2, 40);
-            this.pWordList.Size = new System.Drawing.Size(926, 706);
+            this.pWordList.Size = new System.Drawing.Size(926, 711);
             this.pWordList.TabIndex = 15;
             // 
             // lbRemainingWords
@@ -283,7 +282,7 @@
             this.lbRemainingWords.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.lbRemainingWords.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lbRemainingWords.ForeColor = System.Drawing.Color.White;
-            this.lbRemainingWords.Location = new System.Drawing.Point(6, 674);
+            this.lbRemainingWords.Location = new System.Drawing.Point(6, 679);
             this.lbRemainingWords.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbRemainingWords.Name = "lbRemainingWords";
             this.lbRemainingWords.Size = new System.Drawing.Size(40, 20);
@@ -297,7 +296,7 @@
             this.lbCounter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.lbCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lbCounter.ForeColor = System.Drawing.Color.White;
-            this.lbCounter.Location = new System.Drawing.Point(798, 674);
+            this.lbCounter.Location = new System.Drawing.Point(798, 679);
             this.lbCounter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbCounter.Name = "lbCounter";
             this.lbCounter.Size = new System.Drawing.Size(40, 20);
@@ -310,7 +309,7 @@
             this.pTextSize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
             this.pTextSize.Controls.Add(this.lbSize);
             this.pTextSize.Controls.Add(this.ntbTextSize);
-            this.pTextSize.Location = new System.Drawing.Point(14, 772);
+            this.pTextSize.Location = new System.Drawing.Point(14, 777);
             this.pTextSize.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pTextSize.Name = "pTextSize";
             this.pTextSize.Padding = new System.Windows.Forms.Padding(2);
@@ -383,6 +382,7 @@
             // pTopBorder
             // 
             this.pTopBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pTopBorder.Cursor = System.Windows.Forms.Cursors.SizeNS;
             this.pTopBorder.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTopBorder.Location = new System.Drawing.Point(0, 0);
             this.pTopBorder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -393,8 +393,9 @@
             // pBottomBorder
             // 
             this.pBottomBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pBottomBorder.Cursor = System.Windows.Forms.Cursors.SizeNS;
             this.pBottomBorder.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pBottomBorder.Location = new System.Drawing.Point(0, 828);
+            this.pBottomBorder.Location = new System.Drawing.Point(0, 833);
             this.pBottomBorder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pBottomBorder.Name = "pBottomBorder";
             this.pBottomBorder.Size = new System.Drawing.Size(1144, 2);
@@ -403,34 +404,24 @@
             // pRightBorder
             // 
             this.pRightBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pRightBorder.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.pRightBorder.Dock = System.Windows.Forms.DockStyle.Right;
             this.pRightBorder.Location = new System.Drawing.Point(1142, 2);
             this.pRightBorder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pRightBorder.Name = "pRightBorder";
-            this.pRightBorder.Size = new System.Drawing.Size(2, 826);
+            this.pRightBorder.Size = new System.Drawing.Size(2, 831);
             this.pRightBorder.TabIndex = 22;
             // 
             // pLeftBorder
             // 
             this.pLeftBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pLeftBorder.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.pLeftBorder.Dock = System.Windows.Forms.DockStyle.Left;
             this.pLeftBorder.Location = new System.Drawing.Point(0, 2);
             this.pLeftBorder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pLeftBorder.Name = "pLeftBorder";
-            this.pLeftBorder.Size = new System.Drawing.Size(2, 826);
+            this.pLeftBorder.Size = new System.Drawing.Size(2, 831);
             this.pLeftBorder.TabIndex = 23;
-            // 
-            // pbLogo
-            // 
-            this.pbLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pbLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbLogo.Image")));
-            this.pbLogo.Location = new System.Drawing.Point(42, 606);
-            this.pbLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pbLogo.Name = "pbLogo";
-            this.pbLogo.Size = new System.Drawing.Size(110, 110);
-            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbLogo.TabIndex = 5;
-            this.pbLogo.TabStop = false;
             // 
             // btnLoadFile
             // 
@@ -474,6 +465,7 @@
             this.lbSection.TabIndex = 27;
             this.lbSection.Text = "test";
             this.lbSection.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbSection.Click += new System.EventHandler(this.lbSection_Click);
             // 
             // cbTopic
             // 
@@ -586,12 +578,27 @@
             this.btnDeleteList.UseVisualStyleBackColor = false;
             this.btnDeleteList.Click += new System.EventHandler(this.btnDeleteList_Click);
             // 
+            // lbLogo
+            // 
+            this.lbLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbLogo.AutoSize = true;
+            this.lbLogo.BackColor = System.Drawing.Color.Transparent;
+            this.lbLogo.Font = new System.Drawing.Font("Poor Richard", 100F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
+            this.lbLogo.ForeColor = System.Drawing.Color.White;
+            this.lbLogo.Location = new System.Drawing.Point(24, 599);
+            this.lbLogo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbLogo.Name = "lbLogo";
+            this.lbLogo.Size = new System.Drawing.Size(149, 151);
+            this.lbLogo.TabIndex = 6;
+            this.lbLogo.Text = "B";
+            this.lbLogo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(131)))), ((int)(((byte)(0)))));
-            this.ClientSize = new System.Drawing.Size(1144, 830);
+            this.ClientSize = new System.Drawing.Size(1144, 835);
             this.Controls.Add(this.btnDeleteList);
             this.Controls.Add(this.lbClose);
             this.Controls.Add(this.btnDelete);
@@ -605,7 +612,6 @@
             this.Controls.Add(this.pTopBorder);
             this.Controls.Add(this.lbMaxNormal);
             this.Controls.Add(this.lbMaxMin);
-            this.Controls.Add(this.pbLogo);
             this.Controls.Add(this.btnNewList);
             this.Controls.Add(this.pTextSize);
             this.Controls.Add(this.pWordList);
@@ -617,11 +623,12 @@
             this.Controls.Add(this.btnAddWord);
             this.Controls.Add(this.btnGetStringPool);
             this.Controls.Add(this.btnRandom);
+            this.Controls.Add(this.lbLogo);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.MinimumSize = new System.Drawing.Size(1144, 734);
+            this.MinimumSize = new System.Drawing.Size(785, 835);
             this.Name = "frmMain";
             this.Text = "Bingonator";
             this.Resize += new System.EventHandler(this.frmMain_Resize);
@@ -633,7 +640,6 @@
             this.pWordList.ResumeLayout(false);
             this.pWordList.PerformLayout();
             this.pTextSize.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.pTitle.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -665,7 +671,6 @@
         private System.Windows.Forms.Panel pBottomBorder;
         private System.Windows.Forms.Panel pRightBorder;
         private System.Windows.Forms.Panel pLeftBorder;
-        private System.Windows.Forms.PictureBox pbLogo;
         private System.Windows.Forms.Button btnLoadFile;
         private System.Windows.Forms.Panel pTitle;
         private System.Windows.Forms.ComboBox cbTopic;
@@ -678,6 +683,7 @@
         private System.Windows.Forms.Timer tPoolWords;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnDeleteList;
+        private System.Windows.Forms.Label lbLogo;
     }
 }
 
