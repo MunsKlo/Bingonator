@@ -45,6 +45,7 @@
             this.pWordList = new System.Windows.Forms.Panel();
             this.lbRemainingWords = new System.Windows.Forms.Label();
             this.lbCounter = new System.Windows.Forms.Label();
+            this.lbCornerTL = new System.Windows.Forms.Label();
             this.pTextSize = new System.Windows.Forms.Panel();
             this.lbSize = new System.Windows.Forms.Label();
             this.btnNewList = new System.Windows.Forms.Button();
@@ -66,11 +67,15 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnDeleteList = new System.Windows.Forms.Button();
             this.lbLogo = new System.Windows.Forms.Label();
+            this.lbCornerTR = new System.Windows.Forms.Label();
+            this.lbCornerBR = new System.Windows.Forms.Label();
+            this.lbCornerBL = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ntbTextSize)).BeginInit();
             this.pAddWord.SuspendLayout();
             this.pGetWord.SuspendLayout();
             this.pWordList.SuspendLayout();
             this.pTextSize.SuspendLayout();
+            this.pTopBorder.SuspendLayout();
             this.pTitle.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -303,6 +308,18 @@
             this.lbCounter.TabIndex = 3;
             this.lbCounter.Text = "test";
             // 
+            // lbCornerTL
+            // 
+            this.lbCornerTL.AutoSize = true;
+            this.lbCornerTL.BackColor = System.Drawing.Color.Transparent;
+            this.lbCornerTL.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.lbCornerTL.Font = new System.Drawing.Font("Segoe UI", 1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbCornerTL.Location = new System.Drawing.Point(0, 0);
+            this.lbCornerTL.MinimumSize = new System.Drawing.Size(3, 3);
+            this.lbCornerTL.Name = "lbCornerTL";
+            this.lbCornerTL.Size = new System.Drawing.Size(3, 3);
+            this.lbCornerTL.TabIndex = 28;
+            // 
             // pTextSize
             // 
             this.pTextSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -382,6 +399,7 @@
             // pTopBorder
             // 
             this.pTopBorder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(58)))), ((int)(((byte)(120)))));
+            this.pTopBorder.Controls.Add(this.lbCornerTL);
             this.pTopBorder.Cursor = System.Windows.Forms.Cursors.SizeNS;
             this.pTopBorder.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTopBorder.Location = new System.Drawing.Point(0, 0);
@@ -593,13 +611,55 @@
             this.lbLogo.Text = "B";
             this.lbLogo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // lbCornerTR
+            // 
+            this.lbCornerTR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbCornerTR.AutoSize = true;
+            this.lbCornerTR.BackColor = System.Drawing.Color.Transparent;
+            this.lbCornerTR.Cursor = System.Windows.Forms.Cursors.SizeNESW;
+            this.lbCornerTR.Font = new System.Drawing.Font("Segoe UI", 1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbCornerTR.Location = new System.Drawing.Point(50, 50);
+            this.lbCornerTR.MinimumSize = new System.Drawing.Size(3, 3);
+            this.lbCornerTR.Name = "lbCornerTR";
+            this.lbCornerTR.Size = new System.Drawing.Size(3, 3);
+            this.lbCornerTR.TabIndex = 28;
+            // 
+            // lbCornerBR
+            // 
+            this.lbCornerBR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbCornerBR.AutoSize = true;
+            this.lbCornerBR.BackColor = System.Drawing.Color.Transparent;
+            this.lbCornerBR.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.lbCornerBR.Font = new System.Drawing.Font("Segoe UI", 1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbCornerBR.Location = new System.Drawing.Point(571, 416);
+            this.lbCornerBR.MinimumSize = new System.Drawing.Size(3, 3);
+            this.lbCornerBR.Name = "lbCornerBR";
+            this.lbCornerBR.Size = new System.Drawing.Size(3, 3);
+            this.lbCornerBR.TabIndex = 28;
+            // 
+            // lbCornerBL
+            // 
+            this.lbCornerBL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbCornerBL.AutoSize = true;
+            this.lbCornerBL.BackColor = System.Drawing.Color.Transparent;
+            this.lbCornerBL.Cursor = System.Windows.Forms.Cursors.SizeNESW;
+            this.lbCornerBL.Font = new System.Drawing.Font("Segoe UI", 1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbCornerBL.Location = new System.Drawing.Point(579, 424);
+            this.lbCornerBL.MinimumSize = new System.Drawing.Size(3, 3);
+            this.lbCornerBL.Name = "lbCornerBL";
+            this.lbCornerBL.Size = new System.Drawing.Size(3, 3);
+            this.lbCornerBL.TabIndex = 28;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(131)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(1144, 835);
+            this.Controls.Add(this.lbCornerBL);
+            this.Controls.Add(this.lbCornerBR);
             this.Controls.Add(this.btnDeleteList);
+            this.Controls.Add(this.lbCornerTR);
             this.Controls.Add(this.lbClose);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnSave);
@@ -640,6 +700,8 @@
             this.pWordList.ResumeLayout(false);
             this.pWordList.PerformLayout();
             this.pTextSize.ResumeLayout(false);
+            this.pTopBorder.ResumeLayout(false);
+            this.pTopBorder.PerformLayout();
             this.pTitle.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -684,6 +746,13 @@
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnDeleteList;
         private System.Windows.Forms.Label lbLogo;
+        private System.Windows.Forms.Label lbCornerTL;
+        private System.Windows.Forms.Label lbCornerRightTop;
+        private System.Windows.Forms.Label lbCornerTR;
+        private System.Windows.Forms.Label lbCornerBottomLeft;
+        private System.Windows.Forms.Label lbCornerBottomRight;
+        private System.Windows.Forms.Label lbCornerBR;
+        private System.Windows.Forms.Label lbCornerBL;
     }
 }
 

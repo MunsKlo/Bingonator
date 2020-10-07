@@ -43,6 +43,8 @@ namespace BingoWortGeber
         Color notEnable = Color.FromArgb(187, 194, 194);
         Color enable = Color.White;
 
+        Color blue = Color.FromArgb(12, 58, 120);
+
 
 
         public frmMain()
@@ -57,7 +59,7 @@ namespace BingoWortGeber
             cbTopic.BackColor = Color.White;
 
             UpdateLabels();
-            FillButtonLists();
+            FillElementLists();
             UpdateButtons();
 
             MouseUp += (o, e) => { MouseDragDown(); };
@@ -69,6 +71,23 @@ namespace BingoWortGeber
                 label.MouseUp += (o, e) => { MouseDragDown(); };
                 label.MouseDown += (o, e) => { MouseDragUp(); };
                 label.MouseMove += (o, e) => { MouseMoving(); };
+            }
+
+            foreach (var label in Variables.cornerLabels)
+            {
+                label.MouseUp -= (o, e) => { MouseDragDown(); };
+                label.MouseDown -= (o, e) => { MouseDragUp(); };
+                label.MouseMove -= (o, e) => { MouseMoving(); };
+
+                label.MouseUp += (o, e) => { resize = false; };
+                label.MouseDown += (o, e) => 
+                {
+                    resize = true;
+                    dragCursorPoint = Cursor.Position;
+                    borderRight = Location.X + Width;
+                    borderBottom = Location.Y + Height;
+                };
+                label.MouseMove += (o, e) => { MouseMoving(label.Name); };
             }
 
             foreach (var panel in Controls.OfType<Panel>())
@@ -88,13 +107,29 @@ namespace BingoWortGeber
             pTopBorder.MouseMove += (o, e) => { MouseMoving("u"); };
             pBottomBorder.MouseMove += (o, e) => { MouseMoving("d"); };
 
+            lbCornerTL.Location = new Point(Location.X, Location.Y);
+            lbCornerTR.Location = new Point(Location.X + Width - lbCornerTR.Width, Location.Y);
+            lbCornerBL.Location = new Point(Location.X, Location.Y + Height - lbCornerBL.Height);
+            lbCornerBR.Location = new Point(Location.X + Width - lbCornerTR.Width, Location.Y + Height - lbCornerBL.Height);
+
+            lbCornerTL.BackColor = blue;
+            lbCornerTR.BackColor = blue;
+            lbCornerBL.BackColor = blue;
+            lbCornerBR.BackColor = blue;
+
             lbSection.Text = "";
             tbAddWord.PlaceholderText = "Wort eingeben...";
             SetToolTip();
             SaveFont();
         }
 
-        private void FillButtonLists()
+        void CornerEvents()
+        {
+            lbCornerTR.MouseUp -= (o, e) => { MouseDragDown(); };
+            lbCornerTR.MouseUp += (o, e) => { resize = false; };
+        }
+
+        private void FillElementLists()
         {
             Variables.playButtons = new List<Button>
             {
@@ -134,6 +169,14 @@ namespace BingoWortGeber
                 btnSave,
                 btnDelete,
                 btnDeleteList
+            };
+
+            Variables.cornerLabels = new List<Label>
+            {
+                lbCornerTL,
+                lbCornerTR,
+                lbCornerBL,
+                lbCornerBR
             };
         }
 
@@ -440,8 +483,13 @@ namespace BingoWortGeber
 
         void MouseMoving(string direction = "")
         {
-            lbCounter.Text = Cursor.Position.X.ToString();
-            lbRemainingWords.Text = Cursor.Position.Y.ToString();
+            Drag();
+            //Vergändern der größe vom Fenster
+            ResizeWindow(direction);
+        }
+
+        void Drag()
+        {
             if (WindowState == FormWindowState.Maximized && dragging)
             {
                 dragging = false;
@@ -465,9 +513,10 @@ namespace BingoWortGeber
                 Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
                 Location = Point.Add(dragFrmPoint, new Size(dif));
             }
+        }
 
-
-            //Vergändern der größe vom Fenster
+        void ResizeWindow(string direction)
+        {
             if (resize)
             {
                 //Rechts
@@ -478,12 +527,12 @@ namespace BingoWortGeber
                     Cursor.Position = new Point(Location.X + Width, Cursor.Position.Y);
                 }
                 //Links
-                if (direction == "l")
+                else if (direction == "l")
                 {
                     var dif = Cursor.Position.X - dragCursorPoint.X;
                     var left = dif > 0 ? false : true;
 
-                    if(Width == MinimumSize.Width && left)
+                    if (Width == MinimumSize.Width && left)
                     {
                         Location = new Point(Location.X, Location.Y);
                         Width -= dif;
@@ -493,14 +542,14 @@ namespace BingoWortGeber
                         Location = new Point(Location.X + dif, Location.Y);
                         Width -= dif;
                     }
-                    if(Location.X + Width != borderRight)
+                    if (Location.X + Width != borderRight)
                     {
                         Location = new Point(borderRight - Width, Location.Y);
                     }
                     Cursor.Position = new Point(Location.X, Cursor.Position.Y);
                 }
                 //Oben
-                if(direction == "u")
+                else if (direction == "u")
                 {
                     var dif = Cursor.Position.Y - dragCursorPoint.Y;
                     var top = dif > 0 ? false : true;
@@ -509,27 +558,70 @@ namespace BingoWortGeber
                         Location = new Point(Location.X, Location.Y + dif);
                         Height -= dif;
                     }
-                    else if (Width > MinimumSize.Width)
+                    else if (Height > MinimumSize.Height)
                     {
                         Location = new Point(Location.X, Location.Y + dif);
                         Height -= dif;
                     }
-                    if (Location.Y + Width != borderBottom)
+                    if (Location.Y + Height != borderBottom)
                     {
-                        Location = new Point(Location.X, borderBottom -  Height);
+                        Location = new Point(Location.X, borderBottom - Height);
                     }
                     Cursor.Position = new Point(Cursor.Position.X, Location.Y);
                 }
                 //Unten
-                if(direction == "d")
+                else if (direction == "d")
                 {
                     var dif = Cursor.Position.Y - dragCursorPoint.Y;
                     Height += dif;
                     Cursor.Position = new Point(Cursor.Position.X, Location.Y + Height);
                 }
+                //Oben-Links
+                else if(direction == lbCornerTL.Name)
+                {
+                    var difX = Cursor.Position.X - dragCursorPoint.X;
+                    var difY = Cursor.Position.Y - dragCursorPoint.Y;
+                    var left = difX > 0 ? false : true;
+                    var top = difY > 0 ? false : true;
+                    if (Height > MinimumSize.Height || top)
+                    {
+                        Location = new Point(Location.X, Location.Y + difY);
+                        Height -= difY;
+                    }
+                    else if (Height > MinimumSize.Height)
+                    {
+                        Location = new Point(Location.X, Location.Y + difY);
+                        Height -= difY;
+                    }
+                    if (Location.Y + Height != borderBottom)
+                    {
+                        Location = new Point(Location.X, borderBottom - Height);
+                    }
+                    if (Width == MinimumSize.Width && left)
+                    {
+                        Location = new Point(Location.X, Location.Y);
+                        Width -= difX;
+                    }
+                    else if (Width > MinimumSize.Width)
+                    {
+                        Location = new Point(Location.X + difX, Location.Y);
+                        Width -= difX ;
+                    }
+                    if (Location.X + Width != borderRight)
+                    {
+                        Location = new Point(borderRight - Width, Location.Y);
+                    }
+                    Cursor.Position = new Point(Location.X, Location.Y);
+                }
+                //Oben-Rechts
+                else if (direction == lbCornerTR.Name)
+                {
+                    var dif = Cursor.Position.X - dragCursorPoint.X;
+                    Width += dif;
+                    Cursor.Position = new Point(Location.X + Width, Cursor.Position.Y);
+                }
                 dragCursorPoint = Cursor.Position;
             }
-            
         }
 
         private void btnLoadFile_Click(object sender, EventArgs e)

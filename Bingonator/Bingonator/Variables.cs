@@ -22,5 +22,6 @@ namespace BingoWortGeber
         public static List<Button> createButtons = new List<Button>();
         public static List<Button> menuButtons = new List<Button>();
         public static List<Button> noListButtons = new List<Button>();
+        public static List<Label> cornerLabels = new List<Label>();
     }
 }
