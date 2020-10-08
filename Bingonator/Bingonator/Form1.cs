@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Bingonator;
+using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Transactions;
 using System.Windows.Forms;
@@ -44,6 +46,8 @@ namespace BingoWortGeber
         Color enable = Color.White;
 
         Color blue = Color.FromArgb(12, 58, 120);
+
+        
 
 
 
@@ -175,8 +179,16 @@ namespace BingoWortGeber
             {
                 lbCornerTL,
                 lbCornerTR,
-                lbCornerBL,
-                lbCornerBR
+                lbCornerBR,
+                lbCornerBL
+            };
+
+            Variables.borderPanels = new List<Panel>
+            {
+                pTopBorder,
+                pRightBorder,
+                pBottomBorder,
+                pLeftBorder
             };
         }
 
@@ -194,16 +206,21 @@ namespace BingoWortGeber
 
         void SetToolTip()
         {
-            tt1.SetToolTip(btnAddWord, "Fügt ein Wort hinzu.");
-            tt1.SetToolTip(btnRandom, "Gibt ein zufälliges Wort aus dem Wörter-Pool aus.");
-            tt1.SetToolTip(btnGetStringPool, "Gibt alle Wörter des Pools aus.");
-            //tt1.SetToolTip(btnStartOrQuit, "Startet das Spiel oder beendet das laufende Spiel");
-            //tt1.SetToolTip(btnCreateList, "Fügt ein Wort hinzu.");
-            tt1.SetToolTip(btnAbort, "Bricht die Listenerstellung ab.");
-            tt1.SetToolTip(btnSave, "Speichert die Listen in einem Textdokument.");
-            tt1.SetToolTip(btnLoadFile, "Lädt die Listen aus einem Textdokument.");
-            tt1.SetToolTip(lbSize, "Bestimmt die Schriftgröße des Pools.");
-            tt1.SetToolTip(btnDelete, "Entfernt eine Wort aus dem Wort-Pool.");
+            tt1.SetToolTip(btnAddWord, StringConst.ADDLISTTOOLTIPTEXT);
+            tt1.SetToolTip(btnRandom, StringConst.RANDOMTOOLTIPTEXT);
+            tt1.SetToolTip(btnGetStringPool, StringConst.GETSTRINGPOOLTTOOLTIPTEXT);
+            tt1.SetToolTip(btnStartOrQuit, StringConst.GAMESTARTTOOLTIPTEXT);
+            tt1.SetToolTip(btnNewList, StringConst.NEWLISTTOOLTIPTEXT);
+            tt1.SetToolTip(btnAbort, StringConst.ABORTTOOLTIPTEXT);
+            tt1.SetToolTip(btnSave, StringConst.SAVETOOLTIPTEXT);
+            tt1.SetToolTip(btnLoadFile, StringConst.LOADTOOLTIPTEXT);
+            tt1.SetToolTip(lbSize, StringConst.SIZETOOLTIPTEXT);
+            tt1.SetToolTip(btnDelete, StringConst.DELETEWORDTOOLTIPTEXT);
+            tt1.SetToolTip(btnDeleteList, StringConst.DELETELISTTOOLTIPTEXT);
+            tt1.SetToolTip(ntbTextSize, StringConst.SIZETOOLTIPTEXT);
+            tt1.SetToolTip(lbMaxMin, StringConst.MINTOOLTIPTEXT);
+            tt1.SetToolTip(lbMaxNormal, StringConst.MAXTOOLTIPTEXT);
+            tt1.SetToolTip(lbClose, StringConst.CLOSETOOLTIPTEXT);
         }
 
         private void SaveFont()
@@ -305,6 +322,7 @@ namespace BingoWortGeber
                 {
                     playing = true;
                     btnStartOrQuit.Text = "Spiel beenden";
+                    tt1.SetToolTip(btnStartOrQuit, StringConst.GAMESQUITTOOLTIPTEXT);
                 }
                 else
                 {
@@ -312,6 +330,7 @@ namespace BingoWortGeber
                     Variables.duplicates = new List<string>();
                     tbRandomString.Text = "";
                     tbRandomString.PlaceholderText = "Spiel wurde beendet";
+                    tt1.SetToolTip(btnStartOrQuit, StringConst.GAMESTARTTOOLTIPTEXT);
                     btnStartOrQuit.Text = "Spiel starten";
                     rtbFullWordList.Text = string.Empty;
 
@@ -326,9 +345,13 @@ namespace BingoWortGeber
         private void ntbTextSize_ValueChanged(object sender, EventArgs e)
         {
             var numb = (int)ntbTextSize.Value;
-            if (numb < maxSize && numb > minSize)
+            if (numb <= maxSize && numb >= minSize)
             {
                 rtbFullWordList.Font = new Font(rtbFullWordList.Font.FontFamily.Name, numb, FontStyle.Bold);
+            }
+            else
+            {
+                ntbTextSize.Value = int.Parse(rtbFullWordList.Font.Size.ToString());
             }
             UpdateLabels();
         }
@@ -421,11 +444,31 @@ namespace BingoWortGeber
             {
                 lbMaxNormal.Text = "🗖";
 
+                tt1.SetToolTip(lbMaxNormal, StringConst.MAXTOOLTIPTEXT);
+
                 lbLogo.Location = new Point(originalLocationLabelX, originalLocationLabelY);
+
+                for (int i = 0; i < Variables.borderPanels.Count; i++)
+                {
+                    if (i % 2 == 0)
+                        Variables.borderPanels[i].Cursor = Cursors.SizeNS;
+                    else
+                        Variables.borderPanels[i].Cursor = Cursors.SizeWE;
+                }
+
+                for (int i = 0; i < Variables.cornerLabels.Count; i++)
+                {
+                    if (i % 2 == 0)
+                        Variables.cornerLabels[i].Cursor = Cursors.SizeNWSE;
+                    else
+                        Variables.cornerLabels[i].Cursor = Cursors.SizeNESW;
+                }
             }
             else
             {
                 lbMaxNormal.Text = "🗗";
+
+                tt1.SetToolTip(lbMaxNormal, StringConst.RESTORETOOLTIPTEXT);
 
                 var posButton = btnDeleteList.Location;
                 var posLabel = lbSize.Location;
@@ -433,6 +476,15 @@ namespace BingoWortGeber
                 var posLogo = posButton.Y - posLabel.Y;
 
                 lbLogo.Location = new Point(lbLogo.Location.X, posLogo + lbLogo.Height);
+
+                foreach (var panel in Variables.borderPanels)
+                {
+                    panel.Cursor = Cursors.Arrow;
+                }
+                foreach (var label in Variables.cornerLabels)
+                {
+                    label.Cursor = Cursors.Arrow;
+                }
             }
 
             if (lbTitle.Location.X - (tbAddWord.Location.X + tbAddWord.Width) < 80 + lbLogo.Width)
@@ -517,7 +569,7 @@ namespace BingoWortGeber
 
         void ResizeWindow(string direction)
         {
-            if (resize)
+            if (resize && WindowState != FormWindowState.Maximized)
             {
                 //Rechts
                 if (direction == "r")
@@ -793,6 +845,7 @@ namespace BingoWortGeber
                     UpdateButtons();
                     Variables.words = new List<string>();
                     btnNewList.Text = "Liste hinzufügen";
+                    tt1.SetToolTip(btnNewList, StringConst.ADDLISTTOOLTIPTEXT);
                     rtbFullWordList.Text = string.Empty;
                     tbAddWord.Text = string.Empty;
                     tbAddWord.Focus();
@@ -805,6 +858,7 @@ namespace BingoWortGeber
                     if (titleFrm.Title != null)
                     {
                         btnNewList.Text = "Neue Liste";
+                        tt1.SetToolTip(btnNewList, StringConst.NEWLISTTOOLTIPTEXT);
                         creatingList = false;
                         var content = new Content();
                         content = CreateContent(titleFrm.Title);
@@ -892,7 +946,7 @@ namespace BingoWortGeber
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (!creatingList && !playing)
+            if (!creatingList && !playing && Variables.sections.Count > 0)
                 SaveLists();
         }
 
