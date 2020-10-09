@@ -8,15 +8,13 @@ using System.Windows.Forms;
 
 namespace BingoWortGeber
 {
-    class Variables
+    static class Variables
     {
         public static List<Content> sections = new List<Content>();
         public static List<string> words = new List<string>();
         public static List<string> duplicates = new List<string>();
 
-        public static string titleSection = "";
-
-        public static Color blue = Color.FromArgb(12, 58, 120);
+        public static string titleSection = string.Empty;
 
         public static List<Button> playButtons = new List<Button>();
         public static List<Button> createButtons = new List<Button>();
@@ -24,5 +22,9 @@ namespace BingoWortGeber
         public static List<Button> noListButtons = new List<Button>();
         public static List<Label> cornerLabels = new List<Label>();
         public static List<Panel> borderPanels = new List<Panel>();
+
+        public static Color notEnable = Color.FromArgb(187, 194, 194);
+        public static Color enable = Color.White;
+        public static Color blue = Color.FromArgb(12, 58, 120);
     }
 }

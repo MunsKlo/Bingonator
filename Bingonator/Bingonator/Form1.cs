@@ -28,6 +28,7 @@ namespace BingoWortGeber
         bool dragging = false;
         bool creatingList = false;
         bool resize = false;
+        bool snap = false;
 
         int borderBottom;
         int borderRight;
@@ -42,19 +43,30 @@ namespace BingoWortGeber
 
         string startPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        Color notEnable = Color.FromArgb(187, 194, 194);
-        Color enable = Color.White;
-
-        Color blue = Color.FromArgb(12, 58, 120);
-
         
-
-
 
         public frmMain()
         {
             InitializeComponent();
 
+            SetStartSettings();
+
+            UpdateLabels();
+            FillElementLists();
+            UpdateButtons();
+
+            SetDragMouseEvent();
+
+            SetCorners();
+            CornerEvents();
+            SetResizeMouseEvents();
+
+            SetToolTip();
+            SaveFont();
+        }
+
+        void SetStartSettings()
+        {
             standardWidth = Width;
             standardHeight = Height;
 
@@ -62,10 +74,12 @@ namespace BingoWortGeber
             lbSize.Text = rtbFullWordList.Font.Size.ToString();
             cbTopic.BackColor = Color.White;
 
-            UpdateLabels();
-            FillElementLists();
-            UpdateButtons();
+            lbSection.Text = string.Empty;
+            tbAddWord.PlaceholderText = StringConst.ADDWORDEXTBOXTEXT;
+        }
 
+        void SetDragMouseEvent()
+        {
             MouseUp += (o, e) => { MouseDragDown(); };
             MouseDown += (o, e) => { MouseDragUp(); };
             MouseMove += (o, e) => { MouseMoving(); };
@@ -77,6 +91,48 @@ namespace BingoWortGeber
                 label.MouseMove += (o, e) => { MouseMoving(); };
             }
 
+            pWordList.MouseUp += (o, e) => { MouseDragDown(); };
+            pWordList.MouseDown += (o, e) => { MouseDragUp(); };
+            pWordList.MouseMove += (o, e) => { MouseMoving(); };
+        }
+
+        void SetResizeMouseEvents()
+        {
+            pRightBorder.MouseMove += (o, e) => { MouseMoving("r"); };
+            pLeftBorder.MouseMove += (o, e) => { MouseMoving("l"); };
+            pTopBorder.MouseMove += (o, e) => { MouseMoving("u"); };
+            pBottomBorder.MouseMove += (o, e) => { MouseMoving("d"); };
+
+            
+
+            foreach (var panel in Variables.borderPanels)
+            {
+                panel.MouseUp += (o, e) => { resize = false; };
+                panel.MouseDown += (o, e) =>
+                {
+                    resize = true;
+                    dragCursorPoint = Cursor.Position;
+                    borderRight = Location.X + Width;
+                    borderBottom = Location.Y + Height;
+                };
+            }
+        }
+
+        void SetCorners()
+        {
+            lbCornerTL.BackColor = Variables.blue;
+            lbCornerTR.BackColor = Variables.blue;
+            lbCornerBL.BackColor = Variables.blue;
+            lbCornerBR.BackColor = Variables.blue;
+
+            lbCornerTL.Location = new Point(Location.X, Location.Y);
+            lbCornerTR.Location = new Point(Location.X + Width - lbCornerTR.Width, Location.Y);
+            lbCornerBL.Location = new Point(Location.X, Location.Y + Height - lbCornerBL.Height);
+            lbCornerBR.Location = new Point(Location.X + Width - lbCornerTR.Width, Location.Y + Height - lbCornerBL.Height);
+        }
+
+        void CornerEvents()
+        {
             foreach (var label in Variables.cornerLabels)
             {
                 label.MouseUp -= (o, e) => { MouseDragDown(); };
@@ -84,7 +140,7 @@ namespace BingoWortGeber
                 label.MouseMove -= (o, e) => { MouseMoving(); };
 
                 label.MouseUp += (o, e) => { resize = false; };
-                label.MouseDown += (o, e) => 
+                label.MouseDown += (o, e) =>
                 {
                     resize = true;
                     dragCursorPoint = Cursor.Position;
@@ -93,44 +149,6 @@ namespace BingoWortGeber
                 };
                 label.MouseMove += (o, e) => { MouseMoving(label.Name); };
             }
-
-            foreach (var panel in Controls.OfType<Panel>())
-            {
-                panel.MouseUp += (o, e) => { resize = false; };
-                panel.MouseDown += (o, e) =>
-                {
-                    resize = true; 
-                    dragCursorPoint = Cursor.Position; 
-                    borderRight = Location.X + Width;
-                    borderBottom = Location.Y + Height;
-                };
-            }
-
-            pRightBorder.MouseMove += (o, e) => { MouseMoving("r"); };
-            pLeftBorder.MouseMove += (o, e) => { MouseMoving("l"); };
-            pTopBorder.MouseMove += (o, e) => { MouseMoving("u"); };
-            pBottomBorder.MouseMove += (o, e) => { MouseMoving("d"); };
-
-            lbCornerTL.Location = new Point(Location.X, Location.Y);
-            lbCornerTR.Location = new Point(Location.X + Width - lbCornerTR.Width, Location.Y);
-            lbCornerBL.Location = new Point(Location.X, Location.Y + Height - lbCornerBL.Height);
-            lbCornerBR.Location = new Point(Location.X + Width - lbCornerTR.Width, Location.Y + Height - lbCornerBL.Height);
-
-            lbCornerTL.BackColor = blue;
-            lbCornerTR.BackColor = blue;
-            lbCornerBL.BackColor = blue;
-            lbCornerBR.BackColor = blue;
-
-            lbSection.Text = "";
-            tbAddWord.PlaceholderText = "Wort eingeben...";
-            SetToolTip();
-            SaveFont();
-        }
-
-        void CornerEvents()
-        {
-            lbCornerTR.MouseUp -= (o, e) => { MouseDragDown(); };
-            lbCornerTR.MouseUp += (o, e) => { resize = false; };
         }
 
         private void FillElementLists()
@@ -199,7 +217,7 @@ namespace BingoWortGeber
             else
             {
                 tPoolWords.Stop();
-                tbRandomString.Text = "";
+                tbRandomString.Text = string.Empty;
             }
                 
         }
@@ -253,20 +271,19 @@ namespace BingoWortGeber
                 }
                 else
                 {
-                    tbRandomString.Text = "Keine Wörter mehr vorhanden";
                     btnStartOrQuit.PerformClick();
                 }
 
                 UpdateLabels();
                 FillField(false);
-                btnGetStringPool.Text = "Alle Wörter ausgeben";
-                if (rtbFullWordList.Text == "")
+                btnGetStringPool.Text = StringConst.GETSTRINGPOOLBUTTONTTEXT;
+                if (rtbFullWordList.Text == string.Empty)
                 {
-                    btnRandom.Text = "Spiel beenden";
+                    btnRandom.Text = StringConst.GAMESQUITBUTTONTEXT;
                 }
                 else
                 {
-                    btnRandom.Text = "Nächstes Wort";
+                    btnRandom.Text = StringConst.RANDOMBUTTONTEXT;
                 }
             }
         }
@@ -282,6 +299,7 @@ namespace BingoWortGeber
             {
                 if (!playing)
                 {
+                    btnDelete.BackColor = Variables.enable;
                     if (!CheckDuplicate(tbAddWord.Text) && tbAddWord.Text.Length > 0)
                         Variables.words.Add(tbAddWord.Text);
                     tbAddWord.Text = string.Empty;
@@ -301,37 +319,37 @@ namespace BingoWortGeber
 
             if (playing)
             {
-                if (btnGetStringPool.Text == "Alle Wörter ausgeben")
+                if (btnGetStringPool.Text == StringConst.GETSTRINGPOOLBUTTONTTEXT)
                 {
                     FillField(true);
-                    btnGetStringPool.Text = Variables.duplicates.Count > 0 ? "Wörter-Pool zeigen" : "Alle Wörter ausgeben";
+                    btnGetStringPool.Text = Variables.duplicates.Count > 0 ? StringConst.GETRESTSTRINGPOOLBUTTONTTEXT : StringConst.GETSTRINGPOOLBUTTONTTEXT;
                 }
                 else
                 {
                     FillField(false);
-                    btnGetStringPool.Text = "Alle Wörter ausgeben";
+                    btnGetStringPool.Text = StringConst.GETSTRINGPOOLBUTTONTTEXT;
                 }
             }
         }
 
         private void btnStartOrQuit_Click(object sender, EventArgs e)
         {
-            if (!creatingList)
+            if (!creatingList && Variables.sections.Count > 0)
             {
                 if (!playing)
                 {
                     playing = true;
-                    btnStartOrQuit.Text = "Spiel beenden";
+                    btnStartOrQuit.Text = StringConst.GAMESQUITBUTTONTEXT;
                     tt1.SetToolTip(btnStartOrQuit, StringConst.GAMESQUITTOOLTIPTEXT);
                 }
                 else
                 {
                     playing = false;
                     Variables.duplicates = new List<string>();
-                    tbRandomString.Text = "";
-                    tbRandomString.PlaceholderText = "Spiel wurde beendet";
+                    tbRandomString.Text = string.Empty;
+                    tbRandomString.PlaceholderText = StringConst.QUITGAMETEXTBOXTEXT;
                     tt1.SetToolTip(btnStartOrQuit, StringConst.GAMESTARTTOOLTIPTEXT);
-                    btnStartOrQuit.Text = "Spiel starten";
+                    btnStartOrQuit.Text = StringConst.GAMESTARTBUTTONTEXT;
                     rtbFullWordList.Text = string.Empty;
 
                     tbAddWord.Text = string.Empty;
@@ -372,32 +390,36 @@ namespace BingoWortGeber
         {
             lbSize.Text = ntbTextSize.Value.ToString();
             lbSection.Text = ShortString(Variables.titleSection);
-            lbCounter.Text = $"Wörter: {Variables.words.Count}";
-            lbRemainingWords.Text = $"Verbleibene Wörter: {Variables.words.Count - Variables.duplicates.Count}";
+            lbCounter.Text = $"{StringConst.COUNTERLABELTEXT} {Variables.words.Count}";
+            lbRemainingWords.Text = $"{StringConst.REMAININGLABElTEXT} {Variables.words.Count - Variables.duplicates.Count}";
         }
 
         void UpdateButtons()
         {
             foreach (var button in Controls.OfType<Button>())
             {
-                button.BackColor = enable;
+                button.BackColor = Variables.enable;
             }
             cbTopic.Enabled = true;
             tbAddWord.ReadOnly = false;
-            lbSection.BackColor = enable;
+            lbSection.BackColor = Variables.enable;
             //Programm ohne Listen
             if (cbTopic.SelectedIndex == -1 && !creatingList)
             {
                 DisableButtons(Variables.noListButtons);
                 cbTopic.Enabled = false;
-                lbSection.BackColor = notEnable;
+                lbSection.BackColor = Variables.notEnable;
             }
             //Programm beim erstellen von Listen
             else if (creatingList)
             {
                 DisableButtons(Variables.createButtons);
                 cbTopic.Enabled = false;
-                lbSection.BackColor = notEnable;
+                lbSection.BackColor = Variables.notEnable;
+                if(Variables.words.Count == 0)
+                {
+                    btnDelete.BackColor = Variables.notEnable;
+                }
             }
             //Programm beim Spielen
             else if (playing)
@@ -405,7 +427,7 @@ namespace BingoWortGeber
                 DisableButtons(Variables.playButtons);
                 cbTopic.Enabled = false;
                 tbAddWord.ReadOnly = true;
-                lbSection.BackColor = notEnable;
+                lbSection.BackColor = Variables.notEnable;
             }
             //Programm normal im Menü
             else if (!creatingList)
@@ -418,7 +440,7 @@ namespace BingoWortGeber
         {
             foreach (var button in list)
             {
-                button.BackColor = notEnable;
+                button.BackColor = Variables.notEnable;
             }
         }
 
@@ -442,7 +464,7 @@ namespace BingoWortGeber
         {
             if (WindowState == FormWindowState.Normal)
             {
-                lbMaxNormal.Text = "🗖";
+                lbMaxNormal.Text = StringConst.MAXLABELTEXT;
 
                 tt1.SetToolTip(lbMaxNormal, StringConst.MAXTOOLTIPTEXT);
 
@@ -466,7 +488,7 @@ namespace BingoWortGeber
             }
             else
             {
-                lbMaxNormal.Text = "🗗";
+                lbMaxNormal.Text = StringConst.RESTORELABELTEXT;
 
                 tt1.SetToolTip(lbMaxNormal, StringConst.RESTORETOOLTIPTEXT);
 
@@ -486,7 +508,7 @@ namespace BingoWortGeber
                     label.Cursor = Cursors.Arrow;
                 }
             }
-
+            //TItel entfernen oder lassem
             if (lbTitle.Location.X - (tbAddWord.Location.X + tbAddWord.Width) < 80 + lbLogo.Width)
             {
                 lbTitle.Visible = false;
@@ -495,14 +517,28 @@ namespace BingoWortGeber
             {
                 lbTitle.Visible = true;
             }
+
+            //Logo entfernen oder lassen
+            if(lbLogo.Location.Y < btnDeleteList.Location.Y + btnDeleteList.Height)
+            {
+                lbLogo.Visible = false;
+            }
+            else
+            {
+                lbLogo.Visible = true;
+            }
         }
 
         void MouseDragUp()
         {
+            if (snap)
+            {
+                SetSnapMousePosition();
+                snap = false;
+                //SetNousePosition();
+            }
             dragCursorPoint = Cursor.Position;
             dragFrmPoint = Location;
-
-            
             
             dragging = true;
         }
@@ -518,6 +554,7 @@ namespace BingoWortGeber
                 Location = new Point(0, 0);
                 Width = Screen.PrimaryScreen.Bounds.Width / 2;
                 Height = Screen.PrimaryScreen.Bounds.Height - 40;
+                snap = true;
             }
 
             if(posMouse.X == Screen.AllScreens[0].Bounds.Width - 1)
@@ -525,6 +562,7 @@ namespace BingoWortGeber
                 Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2, 0);
                 Width = Screen.PrimaryScreen.Bounds.Width / 2;
                 Height = Screen.PrimaryScreen.Bounds.Height - 40;
+                snap = true;
             }
 
             if(posMouse.Y == 0)
@@ -545,26 +583,60 @@ namespace BingoWortGeber
             if (WindowState == FormWindowState.Maximized && dragging)
             {
                 dragging = false;
-
-                var partX = (double)Cursor.Position.X / Width;
-                var partY = (double)Cursor.Position.Y / Height;
-
-                var oldY = Location.Y;
-                var oldX = Location.X;
-
-                WindowState = FormWindowState.Normal;
-                Width = standardWidth;
-                Height = standardHeight;
-                CenterToScreen();
-
-                Cursor.Position = new Point((int)(Width * partX) + (Location.X + oldX), (int)(Height * partY) + (Location.Y + oldY));
-                MouseDragUp();
+                SetNousePosition();
             }
             else if (dragging)
             {
                 Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
                 Location = Point.Add(dragFrmPoint, new Size(dif));
             }
+        }
+
+        void SetSnapMousePosition()
+        {
+            var isLeft = Location.X == 0 ? true : false;
+            var oldWidth = Width;
+            Width = standardWidth;
+            Height = standardHeight;
+            CenterToScreen();
+            if (isLeft)
+            {
+                Cursor.Position = new Point(Cursor.Position.X + Location.X + (Width - oldWidth), SnapY());
+            }
+            else
+            {
+                Cursor.Position = new Point(Cursor.Position.X - Location.X - (Width - oldWidth), SnapY());
+            }
+        }
+
+        int SnapY() 
+        {
+            if(Cursor.Position.Y < Location.Y)
+            {
+                return Cursor.Position.Y + Location.Y;
+            }
+            else if(Cursor.Position.Y > Location.Y + Height)
+            {
+                return Cursor.Position.Y - Location.Y;
+            }
+            return Cursor.Position.Y;
+        }
+
+        void SetNousePosition(bool isMiddle = false)
+        {
+            var partX = (double)Cursor.Position.X / Width;
+            var partY = (double)Cursor.Position.Y / Height;
+
+            var oldY = Location.Y;
+            var oldX = Location.X;
+
+            WindowState = FormWindowState.Normal;
+            Width = standardWidth;
+            Height = standardHeight;
+            CenterToScreen();
+
+            Cursor.Position = new Point((int)(Width * partX) + (Location.X + oldX), (int)(Height * partY) + (Location.Y + oldY));
+            MouseDragUp();
         }
 
         void ResizeWindow(string direction)
@@ -706,6 +778,7 @@ namespace BingoWortGeber
                 if (Variables.sections.Count != 0)
                     UpdateComboBox();
                 tt1.SetToolTip(lbSection, Variables.titleSection);
+                tt1.SetToolTip(cbTopic, Variables.titleSection);
             }
             UpdateButtons();
         }
@@ -816,7 +889,7 @@ namespace BingoWortGeber
         string ShortString(string newString)
         {
             if (newString.Length > 11)
-                newString = newString.Substring(0, 11) + "...";
+                newString = newString.Substring(0, 11) + StringConst.ELLIPSIS;
             return newString;
         }
 
@@ -838,13 +911,13 @@ namespace BingoWortGeber
         {
             if (!playing)
             {
-                if (btnNewList.Text == "Neue Liste")
+                if (btnNewList.Text == StringConst.NEWLISTBUTTONTEXT)
                 {
                     creatingList = true;
                     SetTimer();
                     UpdateButtons();
                     Variables.words = new List<string>();
-                    btnNewList.Text = "Liste hinzufügen";
+                    btnNewList.Text = StringConst.ADDLISTBUTTONTEXT;
                     tt1.SetToolTip(btnNewList, StringConst.ADDLISTTOOLTIPTEXT);
                     rtbFullWordList.Text = string.Empty;
                     tbAddWord.Text = string.Empty;
@@ -857,7 +930,7 @@ namespace BingoWortGeber
                     titleFrm.ShowDialog();
                     if (titleFrm.Title != null)
                     {
-                        btnNewList.Text = "Neue Liste";
+                        btnNewList.Text = StringConst.NEWLISTBUTTONTEXT;
                         tt1.SetToolTip(btnNewList, StringConst.NEWLISTTOOLTIPTEXT);
                         creatingList = false;
                         var content = new Content();
@@ -886,6 +959,7 @@ namespace BingoWortGeber
                 Variables.words = content.WordList;
                 Variables.titleSection = content.Title;
                 tt1.SetToolTip(lbSection, Variables.titleSection);
+                tt1.SetToolTip(cbTopic, Variables.titleSection);
                 FillField(true);
                 SetTimer();
             }
@@ -902,7 +976,7 @@ namespace BingoWortGeber
             {
                 rtbFullWordList.Text = string.Empty;
                 creatingList = false;
-                btnNewList.Text = "Neue Liste";
+                btnNewList.Text = StringConst.NEWLISTBUTTONTEXT;
                 UpdateButtons();
             }
         }
@@ -952,12 +1026,16 @@ namespace BingoWortGeber
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if(btnDelete.BackColor == enable)
+            if(btnDelete.BackColor == Variables.enable)
             {
                 var frm = new frmDelete();
                 frm.StartPosition = FormStartPosition.CenterParent;
                 frm.ShowDialog();
                 FillField(true);
+                if(Variables.words.Count == 0)
+                {
+                    btnDelete.BackColor = Variables.notEnable;
+                }
             }
             
         }
@@ -1003,7 +1081,7 @@ namespace BingoWortGeber
 
         private void btnDeleteList_Click(object sender, EventArgs e)
         {
-            if(btnDeleteList.BackColor == enable)
+            if(btnDeleteList.BackColor == Variables.enable)
             {
                 var frm = new frmDelete(false);
                 frm.StartPosition = FormStartPosition.CenterParent;

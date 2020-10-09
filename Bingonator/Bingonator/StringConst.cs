@@ -8,6 +8,7 @@ namespace Bingonator
     static class StringConst
     {
         public const string PLACEHOLDER = "test";
+        public const string ELLIPSIS = "...";
         #region Tooltips
         public const string ADDWORDTOOLTIPTEXT = "Fügt ein neues Wort zur Liste hinzu.";
         public const string RANDOMTOOLTIPTEXT = "Zeigt ein neues zufälliges Wort an.";
@@ -31,7 +32,7 @@ namespace Bingonator
         #region ButtonText
         public const string ADDWORDBUTTONTEXT = "Wort hinzufügen";
         public const string RANDOMBUTTONTEXT= "Nächstes Wort";
-        public const string GETSTRINGPOOLBUTTOnTTEXT = "Alle Wörter ausgeben";
+        public const string GETSTRINGPOOLBUTTONTTEXT = "Alle Wörter ausgeben";
         public const string GETRESTSTRINGPOOLBUTTONTTEXT = "";
         public const string GAMESTARTBUTTONTEXT = "Spiel starten";
         public const string GAMESQUITBUTTONTEXT = "Spiel beenden";
@@ -44,6 +45,11 @@ namespace Bingonator
         public const string DELETELISTBUTTONTEXT = "Liste entfernen";
 
         public const string DELETEBUTTONTEXT = "Löschen";
+        #endregion
+
+        #region TextboxText
+        public const string ADDWORDEXTBOXTEXT = "Wort eingeben...";
+        public const string QUITGAMETEXTBOXTEXT = "Spiel wurde beendet";
         #endregion
 
         #region LabelText
