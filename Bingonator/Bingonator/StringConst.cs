@@ -33,7 +33,7 @@ namespace Bingonator
         public const string ADDWORDBUTTONTEXT = "Wort hinzufügen";
         public const string RANDOMBUTTONTEXT= "Nächstes Wort";
         public const string GETSTRINGPOOLBUTTONTTEXT = "Alle Wörter ausgeben";
-        public const string GETRESTSTRINGPOOLBUTTONTTEXT = "";
+        public const string GETRESTSTRINGPOOLBUTTONTTEXT = "Wort-Pool ausgeben";
         public const string GAMESTARTBUTTONTEXT = "Spiel starten";
         public const string GAMESQUITBUTTONTEXT = "Spiel beenden";
         public const string NEWLISTBUTTONTEXT = "Neue Liste";

@@ -23,8 +23,11 @@ namespace BingoWortGeber
         public static List<Label> cornerLabels = new List<Label>();
         public static List<Panel> borderPanels = new List<Panel>();
 
-        public static Color notEnable = Color.FromArgb(187, 194, 194);
-        public static Color enable = Color.White;
+        public static List<int> startscreens = new List<int>();
+        public static List<int> endscreens = new List<int>();
+
+        public static Color disabledColor = Color.FromArgb(187, 194, 194);
+        public static Color enabledColor = Color.White;
         public static Color blue = Color.FromArgb(12, 58, 120);
     }
 }
