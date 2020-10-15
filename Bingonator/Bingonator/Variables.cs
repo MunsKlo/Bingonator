@@ -20,11 +20,13 @@ namespace BingoWortGeber
         public static List<Button> createButtons = new List<Button>();
         public static List<Button> menuButtons = new List<Button>();
         public static List<Button> noListButtons = new List<Button>();
+        public static List<Label> dragLabels = new List<Label>();
         public static List<Label> cornerLabels = new List<Label>();
         public static List<Panel> borderPanels = new List<Panel>();
 
-        public static List<int> startscreens = new List<int>();
-        public static List<int> endscreens = new List<int>();
+        public static List<int> startScreens = new List<int>();
+        public static List<int> endScreens = new List<int>();
+        public static List<int> topScreens = new List<int>();
 
         public static Color disabledColor = Color.FromArgb(187, 194, 194);
         public static Color enabledColor = Color.White;

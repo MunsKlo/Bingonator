@@ -33,6 +33,8 @@ namespace BingoWortGeber
         bool resize = false;
         bool snap = false;
 
+        string direction;
+
         int borderBottom;
         int borderRight;
 
@@ -82,8 +84,9 @@ namespace BingoWortGeber
 
             for (int i = 0; i < Screen.AllScreens.Length; i++)
             {
-                Variables.startscreens.Add(Screen.AllScreens[i].WorkingArea.Left);
-                Variables.endscreens.Add(Screen.AllScreens[i].WorkingArea.Right - 1);
+                Variables.startScreens.Add(Screen.AllScreens[i].WorkingArea.Left);
+                Variables.endScreens.Add(Screen.AllScreens[i].WorkingArea.Right - 1);
+                Variables.topScreens.Add(Screen.AllScreens[i].WorkingArea.Top);
             }
         }
 
@@ -93,7 +96,7 @@ namespace BingoWortGeber
             MouseDown += (o, e) => { MouseDragUp(); };
             MouseMove += (o, e) => { MouseMoving(); };
 
-            foreach (var label in Controls.OfType<Label>())
+            foreach (var label in Variables.dragLabels)
             {
                 label.MouseUp += (o, e) => { MouseDragDown(); };
                 label.MouseDown += (o, e) => { MouseDragUp(); };
@@ -107,10 +110,10 @@ namespace BingoWortGeber
 
         void SetResizeMouseEvents()
         {
-            pRightBorder.MouseMove += (o, e) => { MouseMoving("r"); };
-            pLeftBorder.MouseMove += (o, e) => { MouseMoving("l"); };
-            pTopBorder.MouseMove += (o, e) => { MouseMoving("u"); };
-            pBottomBorder.MouseMove += (o, e) => { MouseMoving("d"); };
+            pRightBorder.MouseMove += (o, e) => { direction = "r"; MouseMoving(); };
+            pLeftBorder.MouseMove += (o, e) => { direction = "l"; MouseMoving(); };
+            pTopBorder.MouseMove += (o, e) => { direction = "u"; MouseMoving(); };
+            pBottomBorder.MouseMove += (o, e) => { direction = "d"; MouseMoving(); };
 
             
 
@@ -156,7 +159,7 @@ namespace BingoWortGeber
                     borderRight = Location.X + Width;
                     borderBottom = Location.Y + Height;
                 };
-                label.MouseMove += (o, e) => { MouseMoving(label.Name); };
+                label.MouseMove += (o, e) => { direction = label.Name; MouseMoving(); };
             }
         }
 
@@ -216,6 +219,15 @@ namespace BingoWortGeber
                 pRightBorder,
                 pBottomBorder,
                 pLeftBorder
+            };
+
+            Variables.dragLabels = new List<Label>
+            {
+                lbLogo,
+                lbTitle,
+                lbCounter,
+                lbRemainingWords,
+                lbTextSize
             };
         }
 
@@ -559,7 +571,7 @@ namespace BingoWortGeber
             var posMouse = Cursor.Position;
 
 
-            if (Variables.startscreens.Contains(Cursor.Position.X))
+            if (Variables.startScreens.Contains(Cursor.Position.X))
             {
                 Screen targetScreen = null;
                 foreach (var screen in Screen.AllScreens)
@@ -576,7 +588,7 @@ namespace BingoWortGeber
                 snap = true;
             }
 
-            if(Variables.endscreens.Contains(Cursor.Position.X))
+            if(Variables.endScreens.Contains(Cursor.Position.X))
             {
                 Screen targetScreen = null;
                 foreach (var screen in Screen.AllScreens)
@@ -593,21 +605,13 @@ namespace BingoWortGeber
                 snap = true;
             }
 
-            /*if (Variables.startEndscreens.Contains(Cursor.Position.X))
-            {
-                Location = new Point(Screen.PrimaryScreen.Bounds.Width / 2, 0);
-                Width = Screen.PrimaryScreen.Bounds.Width / 2;
-                Height = Screen.PrimaryScreen.Bounds.Height - 40;
-                snap = true;
-            }*/
-
-            if(posMouse.Y == 0)
+            if(Variables.topScreens.Contains(posMouse.Y))
             {
                 WindowState = FormWindowState.Maximized;
             }
         }
 
-        void MouseMoving(string direction = "")
+        void MouseMoving()
         {
             Drag();
             //Vergändern der größe vom Fenster
@@ -638,7 +642,7 @@ namespace BingoWortGeber
 
         void SetSnapMousePosition()
         {
-            var isLeft = Location.X == 0 ? true : false;
+            var isLeft = Variables.startScreens.Contains(Cursor.Position.X) ? true : false;
             var oldWidth = Width;
             Width = standardWidth;
             Height = standardHeight;
@@ -791,18 +795,49 @@ namespace BingoWortGeber
                         Location = new Point(Location.X, Location.Y + difY);
                         Height -= difY;
                     }
-                    else if (Height > MinimumSize.Height)
-                    {
-                        Location = new Point(Location.X, Location.Y + difY);
-                        Height -= difY;
-                    }
                     if (Location.Y + Height != borderBottom)
                     {
                         Location = new Point(Location.X, borderBottom - Height);
                     }
+
                     var dif = Cursor.Position.X - dragCursorPoint.X;
                     Width += dif;
-                    Cursor.Position = new Point(Location.X + Width, Cursor.Position.Y);
+                    Cursor.Position = new Point(Location.X + Width, Location.Y);
+                }
+                //Unten-Links
+                else if (direction == lbCornerBL.Name)
+                {
+                    var difX = Cursor.Position.X - dragCursorPoint.X;
+                    var left = difX > 0 ? false : true;
+
+                    if (Width == MinimumSize.Width && left)
+                    {
+                        Location = new Point(Location.X, Location.Y);
+                        Width -= difX;
+                    }
+                    else if (Width > MinimumSize.Width)
+                    {
+                        Location = new Point(Location.X + difX, Location.Y);
+                        Width -= difX;
+                    }
+                    if (Location.X + Width != borderRight)
+                    {
+                        Location = new Point(borderRight - Width, Location.Y);
+                    }
+                    var dif = Cursor.Position.Y - dragCursorPoint.Y;
+                    Height += dif;
+                    Cursor.Position = new Point(Location.X, Location.Y + Height);
+                }
+                //Unten-Links
+                else if (direction == lbCornerBR.Name)
+                {
+                    var difY = Cursor.Position.Y - dragCursorPoint.Y;
+                    Height += difY;
+
+                    var difX = Cursor.Position.X - dragCursorPoint.X;
+                    Width += difX;
+
+                    Cursor.Position = new Point(Location.X + Width, Location.Y + Height);
                 }
                 dragCursorPoint = Cursor.Position;
             }
