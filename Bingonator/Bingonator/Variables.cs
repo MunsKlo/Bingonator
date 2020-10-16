@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bingonator;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -24,9 +25,7 @@ namespace BingoWortGeber
         public static List<Label> cornerLabels = new List<Label>();
         public static List<Panel> borderPanels = new List<Panel>();
 
-        public static List<int> startScreens = new List<int>();
-        public static List<int> endScreens = new List<int>();
-        public static List<int> topScreens = new List<int>();
+        public static List<Desktop> desktops = new List<Desktop>();
 
         public static Color disabledColor = Color.FromArgb(187, 194, 194);
         public static Color enabledColor = Color.White;
