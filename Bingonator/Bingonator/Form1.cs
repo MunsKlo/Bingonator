@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace BingoWortGeber
@@ -25,6 +27,7 @@ namespace BingoWortGeber
         bool creatingList = false;
         bool resize = false;
         bool snap = false;
+        bool maximized = false;
 
         string direction;
         Desktop currentDesktop;
@@ -476,21 +479,24 @@ namespace BingoWortGeber
 
         private void lbMaxNormal_Click(object sender, EventArgs e)
         {
-            WindowState = WindowState == FormWindowState.Normal ? FormWindowState.Maximized : FormWindowState.Normal;
-            if(WindowState == FormWindowState.Normal)
+            if(maximized)
             {
+                maximized = false;
                 Width = standardWidth;
                 Height = standardHeight;
                 CenterToScreen();
+            }
+            else
+            {
+                maximized = true;
+                Maximize();
             }
         }
 
         private void frmMain_Resize(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Normal)
+            if (!maximized)
             {
-                lbMaxNormal.Text = StringConst.MAXLABELTEXT;
-
                 tt1.SetToolTip(lbMaxNormal, StringConst.MAXTOOLTIPTEXT);
 
                 lbLogo.Location = new Point(originalLocationLabelX, originalLocationLabelY);
@@ -513,16 +519,14 @@ namespace BingoWortGeber
             }
             else
             {
-                lbMaxNormal.Text = StringConst.RESTORELABELTEXT;
-
                 tt1.SetToolTip(lbMaxNormal, StringConst.RESTORETOOLTIPTEXT);
 
-                var posButton = btnDeleteList.Location;
-                var posLabel = lbSize.Location;
+                var posButton = btnDeleteList;
+                var posLabel = lbTextSize;
 
-                var posLogo = posButton.Y - posLabel.Y;
+                var dif = (posLabel.Top - posButton.Bottom) / 2;
 
-                lbLogo.Location = new Point(lbLogo.Location.X, posLogo + lbLogo.Height);
+                lbLogo.Location = new Point(lbLogo.Location.X, (btnDeleteList.Bottom + dif) - (lbLogo.Height / 2));
 
                 foreach (var panel in Variables.borderPanels)
                 {
@@ -542,16 +546,12 @@ namespace BingoWortGeber
             {
                 lbTitle.Visible = true;
             }
+            UpdateMaxNormalLabel();
+        }
 
-            //Logo entfernen oder lassen
-            if(lbLogo.Location.Y < btnDeleteList.Location.Y + btnDeleteList.Height)
-            {
-                lbLogo.Visible = false;
-            }
-            else
-            {
-                lbLogo.Visible = true;
-            }
+        void UpdateMaxNormalLabel()
+        {
+            lbMaxNormal.Text = !maximized ? StringConst.MAXLABELTEXT : StringConst.RESTORELABELTEXT;
         }
 
         void MouseDragUp()
@@ -611,8 +611,16 @@ namespace BingoWortGeber
 
             if(Cursor.Position.Y == currentDesktop.Top)
             {
-                WindowState = FormWindowState.Maximized;
+                maximized = true;
+                Maximize();
             }
+        }
+
+        void Maximize()
+        {
+            Location = new Point(currentDesktop.Left, currentDesktop.Top);
+            Width = currentDesktop.Right;
+            Height = currentDesktop.Height;
         }
 
         void MouseMoving()
@@ -636,22 +644,33 @@ namespace BingoWortGeber
 
         void Drag()
         {
-            if (WindowState == FormWindowState.Maximized && dragging)
+            if (maximized && dragging)
             {
+                maximized = false;
                 dragging = false;
                 SetNousePosition();
             }
             else if (dragging)
             {
+                var isBottom = false;
                 Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
-                var posMouse = Cursor.Position;
-                if (lbClose.Bottom + Location.Y + 10 < currentDesktop.Height)
+
+                if(lbClose.Bottom + Location.Y + lbClose.Location.Y == currentDesktop.Height)
+                {
+                    dif = Point.Subtract(Cursor.Position, new Size(new Point(Cursor.Position.X, currentDesktop.Height)));
+                }
+
+                if (lbClose.Bottom + Location.Y + lbClose.Location.Y < currentDesktop.Height)
                 {
                     Location = Point.Add(dragFrmPoint, new Size(dif));
                 }
-                else if (posMouse.Y < currentDesktop.Height)
+                else if(lbClose.Bottom + Location.Y + lbClose.Location.Y == currentDesktop.Height && dif.Y < 0)
                 {
-                    Location = new Point( Location.X, posMouse.Y - dif.Y);
+                    Location = Point.Add(Cursor.Position, new Size(dif));
+                }
+                else
+                {
+                    Location = new Point(Location.X, currentDesktop.Height - lbClose.Bottom - lbClose.Location.Y);
                 }
             }
             
@@ -666,14 +685,20 @@ namespace BingoWortGeber
 
         void SetSnapMousePosition()
         {
-            var isLeft = Cursor.Position.X == currentDesktop.Left ? true : false;
+            var isLeft = Location.X == currentDesktop.Left;
+            var cursorMouseIsLeftSide = Cursor.Position.X < Width / 2;
+            var dif = (double)Cursor.Position.X / Right;
             var oldWidth = Width;
             Width = standardWidth;
             Height = standardHeight;
             CenterToScreen();
-            if (isLeft)
+            if (isLeft && cursorMouseIsLeftSide)
             {
-                Cursor.Position = new Point(Cursor.Position.X + Location.X + (Width - oldWidth), SnapY());
+                Cursor.Position = new Point((int)(Left + (Width * dif)), SnapY());
+            }
+            else if (isLeft)
+            {
+                Cursor.Position = new Point((int)(Left + (Width * dif)), SnapY());
             }
             else
             {
@@ -713,7 +738,7 @@ namespace BingoWortGeber
 
         void ResizeWindow(string direction)
         {
-            if (resize && WindowState != FormWindowState.Maximized)
+            if (resize && !maximized)
             {
                 //Rechts
                 if (direction == "r")
