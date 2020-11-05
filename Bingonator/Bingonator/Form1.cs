@@ -14,7 +14,8 @@ namespace BingoWortGeber
 
     public partial class frmMain : Form
     {
-        Random random = new Random();
+        #region Variables
+        readonly Random random = new Random();
 
         const int minSize = 20;
         const int maxSize = 100;
@@ -43,14 +44,16 @@ namespace BingoWortGeber
 
         int index = 1;
         readonly string startPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-        
+        #endregion
 
         public frmMain()
         {
             InitializeComponent();
 
+            Microsoft.Win32.SystemEvents.DisplaySettingsChanged += (o, e) => { ChangeDesktop(); };
+
             SetStartSettings();
+            FillDesktopList();
 
             UpdateLabels();
             FillElementLists();
@@ -77,7 +80,10 @@ namespace BingoWortGeber
 
             lbSection.Text = string.Empty;
             tbAddWord.PlaceholderText = StringConst.ADDWORDEXTBOXTEXT;
+        }
 
+        void FillDesktopList()
+        {
             for (int i = 0; i < Screen.AllScreens.Length; i++)
             {
                 Variables.desktops.Add(new Desktop
@@ -85,6 +91,7 @@ namespace BingoWortGeber
                     Left = Screen.AllScreens[i].WorkingArea.Left,
                     Right = Screen.AllScreens[i].WorkingArea.Right,
                     Height = Screen.AllScreens[i].WorkingArea.Height,
+                    Width = Screen.AllScreens[i].WorkingArea.Width,
                     Top = Screen.AllScreens[i].WorkingArea.Top
                 });
             }
@@ -619,7 +626,7 @@ namespace BingoWortGeber
         void Maximize()
         {
             Location = new Point(currentDesktop.Left, currentDesktop.Top);
-            Width = currentDesktop.Right;
+            Width = currentDesktop.Width;
             Height = currentDesktop.Height;
         }
 
@@ -652,7 +659,6 @@ namespace BingoWortGeber
             }
             else if (dragging)
             {
-                var isBottom = false;
                 Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
 
                 if(lbClose.Bottom + Location.Y + lbClose.Location.Y == currentDesktop.Height)
@@ -668,18 +674,10 @@ namespace BingoWortGeber
                 {
                     Location = Point.Add(Cursor.Position, new Size(dif));
                 }
-                else
+                else if(lbClose.Bottom + Location.Y + lbClose.Location.Y > currentDesktop.Height)
                 {
                     Location = new Point(Location.X, currentDesktop.Height - lbClose.Bottom - lbClose.Location.Y);
                 }
-            }
-            
-            var isLeft = false;
-            var isRight = false;
-            foreach (var screen in Screen.AllScreens)
-            {
-                isLeft = Cursor.Position.X == 0 || Cursor.Position.X == screen.Bounds.X + 1 ? true : false;
-                isRight = Cursor.Position.X == screen.Bounds.X - 1 ? true : false;
             }
         }
 
@@ -1122,7 +1120,7 @@ namespace BingoWortGeber
 
         private void btnAbort_Click(object sender, EventArgs e)
         {
-            if (!playing)
+            if (creatingList)
             {
                 rtbFullWordList.Text = string.Empty;
                 creatingList = false;
@@ -1262,6 +1260,13 @@ namespace BingoWortGeber
         {
             if(cbTopic.SelectedIndex != -1 && !playing && !creatingList)
                 cbTopic.DroppedDown = true;
+        }
+
+        private void ChangeDesktop()
+        {
+            Variables.desktops = new List<Desktop>();
+            FillDesktopList();
+            SetDesktop();
         }
     }
 }
